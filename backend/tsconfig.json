@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                   // Soporta sintaxis moderna de JavaScript
+    "module": "CommonJS",               // Usado en Node.js para importar módulos
+    "rootDir": "./src",                 // Carpeta donde está el código TypeScript
+    "outDir": "./build",                // Carpeta donde se guardará el código compilado
+    "strict": true,                      // Activa validaciones estrictas de TypeScript
+
+    // 🚀 Optimización y Control de Errores
+    "noImplicitAny": true,              // Prohíbe variables sin tipo explícito
+    "strictNullChecks": true,           // Obliga a manejar `null` y `undefined`
+    "strictPropertyInitialization": true, // Obliga a inicializar todas las propiedades en clases
+    "noImplicitReturns": true,          // Obliga a que todas las funciones devuelvan un valor
+    "noUnusedLocals": true,             // Detecta variables declaradas pero no usadas
+    "noUnusedParameters": true,         // Detecta parámetros en funciones que no se usan
+
+    // 🚀 Mejoras de Rendimiento y Compatibilidad
+    "skipLibCheck": true,               // Ignora la verificación de tipos en `node_modules`
+    "resolveJsonModule": true,          // Permite importar archivos `.json`
+    "esModuleInterop": true,            // Permite importar paquetes CommonJS con sintaxis de ES Modules
+
+    // 🚀 Configuración para Express y Node.js
+    "forceConsistentCasingInFileNames": true, // Evita errores por diferencias en mayúsculas/minúsculas en rutas de archivos
+    "allowSyntheticDefaultImports": true, // Permite importar módulos sin `default` export
+    "types": ["node", "express"]         // Incluye las definiciones de tipos de Node.js y Express
+  },
+  "exclude": ["node_modules", "build"],  // Excluye estas carpetas del análisis de TypeScript
+  "include": ["src"]                     // Solo compila archivos dentro de `src`
+}

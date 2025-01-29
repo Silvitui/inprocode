@@ -25,5 +25,4 @@
     "types": ["node", "express"]         // Incluye las definiciones de tipos de Node.js y Express
   },
   "exclude": ["node_modules", "build"],  // Excluye estas carpetas del análisis de TypeScript
-  "include": ["src"]                     // Solo compila archivos dentro de `src`
 }

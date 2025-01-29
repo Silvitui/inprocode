@@ -6,7 +6,7 @@ const PlaceSchema = new mongoose.Schema({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true }
   },
-  type: { type: String, enum: ['restaurant', 'park', 'museum', 'other'], required: true } 
+  type: { type: String, enum: ["restaurants","parks","museums","others"], required: true } 
 });
 
 const Place = mongoose.model('Place', PlaceSchema);

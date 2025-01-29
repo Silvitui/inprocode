@@ -1,14 +1,14 @@
-import 'dotenv/config'
 import mongoose from "mongoose";
-import process from 'process'
+import 'dotenv/config';
 
-const mongoDBURI = process.env.MONGO_DB_URI ?? ''
+const mongoDBURI = process.env.MONGO_DB_URI ?? '';
 
-export const DBconnection = () => { mongoose.connect(
-    
-    mongoDBURI, 
-    {})
-    .then(() => {
-        console.log("Connected to MongoDB");
-    })
-}
+export const DBconnection = async () => {
+    try {
+        await mongoose.connect(mongoDBURI);
+        console.log("helloo");
+    } catch (error) {
+        console.error("Error conectando a MongoDB:", error);
+        process.exit(1); 
+    }
+};

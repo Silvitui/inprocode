@@ -1,12 +1,15 @@
-import { EstatisticComponent } from './pages/estatistic/estatistic.component';
 import { Routes } from '@angular/router';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { MapComponent } from './components/map/map.component';
+import { EstatisticComponent } from './components/estatistic/estatistic.component';
 
 export const routes: Routes = [
-    { path: 'home', loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent) },
-    { path: 'login', loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent) },
-    { path: 'register', loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent) },
-    { path: 'map', loadComponent: () => import('./pages/map/map.component').then(m => m.MapComponent) },
-    {path: 'estatistic', loadComponent: () => import('./pages/estatistic/estatistic.component').then(m => m.EstatisticComponent)},
+    { path: 'welcome', component: WelcomeComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'map', component: MapComponent},
+    { path: 'estatistic', component: EstatisticComponent},
     { path: '**', redirectTo: 'home' }
-  ];
-  
+];

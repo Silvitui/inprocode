@@ -1,0 +1,50 @@
+<section class="register-container flex items-center justify-center min-h-screen px-6">
+    <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+      <h2 class="text-3xl font-bold text-green-900 text-center mb-6">Register</h2>
+  
+      @if (errorMessage()) {
+        <p class="text-red-600 text-sm mb-4">{{ errorMessage() }}</p>
+      }
+  
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-semibold mb-2" for="userName">Username</label>
+          <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" 
+                 type="text" id="userName" placeholder="Enter your username" formControlName="userName">
+          @if (registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched) {
+            <p class="text-red-500 text-sm">The name must have at least 3 characters..</p>
+          }
+        </div>
+  
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">Email</label>
+          <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" 
+                 type="email" id="email" placeholder="Enter your email" formControlName="email">
+          @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            <p class="text-red-500 text-sm">Invalid email.</p>
+          }
+        </div>
+  
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">Password</label>
+          <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" 
+                 type="password" id="password" placeholder="Enter your password" formControlName="password">
+          @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+            <p class="text-red-500 text-sm">The password must have at least 6 characters.</p>
+          }
+        </div>
+  
+   
+  
+        <button class="mt-6 w-full bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-lg"
+                [disabled]="registerForm.invalid">
+          Register
+        </button>
+      </form>
+  
+      <p class="mt-4 text-sm text-gray-600 text-center">
+        Already have an account? <a href="/login" class="text-green-700 font-semibold hover:text-green-800">Login</a>
+      </p>
+    </div>
+  </section>
+  

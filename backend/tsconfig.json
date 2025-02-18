@@ -6,7 +6,7 @@
     "outDir": "./build",                // Carpeta donde se guardará el código compilado
     "strict": true,                      // Activa validaciones estrictas de TypeScript
 
-    // 🚀 Optimización y Control de Errores
+
     "noImplicitAny": true,              // Prohíbe variables sin tipo explícito
     "strictNullChecks": true,           // Obliga a manejar `null` y `undefined`
     "strictPropertyInitialization": true, // Obliga a inicializar todas las propiedades en clases
@@ -14,7 +14,6 @@
     "noUnusedLocals": true,             // Detecta variables declaradas pero no usadas
     "noUnusedParameters": true,         // Detecta parámetros en funciones que no se usan
 
-    // 🚀 Mejoras de Rendimiento y Compatibilidad
     "skipLibCheck": true,               // Ignora la verificación de tipos en `node_modules`
     "resolveJsonModule": true,          // Permite importar archivos `.json`
     "esModuleInterop": true,            // Permite importar paquetes CommonJS con sintaxis de ES Modules

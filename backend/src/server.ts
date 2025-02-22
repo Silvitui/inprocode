@@ -7,11 +7,11 @@ import cookieParser from 'cookie-parser';
 import { DBconnection } from './DB/connection';
 import userRouter from './routes/user.routes';
 import authRouter from './routes/auth.routes';
-import tripRouter from './routes/trip.routes';
-import carbonFootRouter from './routes/carbonFoot.routes';
+
 import placesRouter from './routes/places.routes';
 import authMiddleware from './middlewares/authMiddleware';
 import { options } from './utils/config/cors';
+import itineraryRouter from './routes/itineraries.routes';
 
 
 const app = express();
@@ -25,12 +25,13 @@ app.use(morgan('dev')); // sirve para visualizar en consola las peticiones http 
 app.get('/', (_req: Request, res: Response) => {
     res.send('Hello World 🎈🎃🎊🎉✨');
 })
+// Usar en produccion
 
 app.use("/api/auth", authRouter);
 app.use('/api/user', authMiddleware, userRouter)
-app.use("/api/trips",authMiddleware, tripRouter);
-app.use("/api/carbon", authMiddleware, carbonFootRouter);
 app.use("/api/places", authMiddleware, placesRouter);
+app.use("/api/itineraries",  itineraryRouter);
+
 
 
 

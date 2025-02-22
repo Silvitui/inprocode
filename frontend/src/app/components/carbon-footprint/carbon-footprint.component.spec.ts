@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EstatisticComponent } from './estatistic.component';
+import { CarbonFootprintComponent } from './carbon-footprint.component';
 
-describe('EstatisticComponent', () => {
-  let component: EstatisticComponent;
-  let fixture: ComponentFixture<EstatisticComponent>;
+describe('CarbonFootprintComponent', () => {
+  let component: CarbonFootprintComponent;
+  let fixture: ComponentFixture<CarbonFootprintComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EstatisticComponent]
+      imports: [CarbonFootprintComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EstatisticComponent);
+    fixture = TestBed.createComponent(CarbonFootprintComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

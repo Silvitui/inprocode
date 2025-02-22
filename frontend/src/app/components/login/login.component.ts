@@ -12,30 +12,27 @@ import { CommonModule } from '@angular/common';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  private router = inject(Router);
-  private authService = inject(AuthService);
-  private fb = inject(FormBuilder);
+   router = inject(Router);
+  authService = inject(AuthService);
+  fb = inject(FormBuilder);
+  errorMessage = signal<string>('');
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
-
-  
-  errorMessage = signal<string>('');
-
   onSubmit(): void {
     if (this.loginForm.invalid) {
       this.errorMessage.set('Por favor, completa todos los campos correctamente.');
       return;
     }
-
+  
     const credentials = this.loginForm.value; 
-
+  
     this.authService.loginUser(credentials).subscribe({
       next: () => {
         console.log('Login exitoso');
-        this.router.navigate(['/welcome']); 
+        this.router.navigate(['/']); 
       },
       error: (error) => {
         console.error('Error en login:', error);
@@ -43,4 +40,5 @@ export class LoginComponent {
       }
     });
   }
+  
 }

@@ -34,8 +34,8 @@ export class RegisterComponent {
 
     this.authService.registerUser(userData).subscribe({
       next: () => {
-        console.log('Registro exitoso');
-        this.router.navigate(['/welcome']);
+        console.log('✅ Registro exitoso');
+        this.router.navigate(['/login']); // 🔥 Redirigir al login tras registrarse
       },
       error: (error) => {
         console.error('Error en registro:', error);

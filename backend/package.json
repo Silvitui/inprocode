@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "build/server.js",
   "scripts": {
+    "seed": "node build/DB/seed.js",
+    "new-seed": "node build/DB/seed_updated.js",
     "lint": "eslint",
     "dev": "nodemon build/server.js",
     "build:watch": "npx tsc -w",

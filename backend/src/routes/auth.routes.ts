@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, logoutUser, registerUser } from "../controllers/user.controller";
+import { checkAuth, loginUser, logoutUser, registerUser } from "../controllers/auth.controller";
 import authMiddleware from "../middlewares/authMiddleware";
 
 
@@ -7,6 +7,7 @@ const authRouter = Router();
 
 authRouter.post('/register', registerUser)
 authRouter.post('/login', loginUser);
-authRouter.post('/logout', authMiddleware, logoutUser);
+authRouter.get('/logout', logoutUser);
+authRouter.get("/check-auth", authMiddleware, checkAuth);
 
 export default authRouter;

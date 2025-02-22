@@ -1,8 +1,9 @@
 @use "tailwindcss/base";
 @use "tailwindcss/components";
 @use "tailwindcss/utilities";
+@import "mapbox-gl/dist/mapbox-gl.css";
 
 body {
       font-family: 'Montserrat', sans-serif !important;
   }
-  
+

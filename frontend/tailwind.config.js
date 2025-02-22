@@ -7,4 +7,4 @@ export default {
     extend: {},
   },
   plugins: [require("daisyui")], // Si usas DaisyUI, esto debe estar aquí
-}
+};

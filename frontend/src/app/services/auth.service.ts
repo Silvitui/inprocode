@@ -13,6 +13,8 @@ export class AuthService {
   http = inject(HttpClient);
   router = inject(Router);
   isAuthenticated = signal(false);
+  redirectUrl: string | null = null;
+
   constructor() {
     this.checkAuthStatus(); 
   }
@@ -36,20 +38,22 @@ export class AuthService {
     );
   }
 
-  loginUser(credentials: Pick<AuthCredentials, 'email' | 'password'>): Observable<any> { // PICK se usa cuando necesitas seleccionar algunas propiedades (En este caso necesitamos solo email y password.)
+  loginUser(credentials: Pick<AuthCredentials, 'email' | 'password'>): Observable<any> {// PICK se usa cuando necesitas seleccionar algunas propiedades (En este caso necesitamos solo email y password.)
     return this.http.post(`${this.apiUrl}/login`, credentials, { withCredentials: true }).pipe(
       tap(() => {
         this.isAuthenticated.set(true); 
-        console.log('Login exitoso');
-        this.router.navigate(['/welcome']);
+        console.log('Login');
+        const targetUrl = this.redirectUrl || '/welcome';
+        this.redirectUrl = null;  
+        this.router.navigateByUrl(targetUrl);
       }),
       catchError(error => {
-        console.error('Error en el login:', error);
+        console.error(' Error en el login:', error);
         return throwError(() => error);
       })
     );
   }
-
+  
 
   logoutUser(): Observable<any> {
     return this.http.get(`${this.apiUrl}/logout`, { withCredentials: true }).pipe(

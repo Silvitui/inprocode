@@ -1,20 +1,17 @@
-import { Injectable, inject } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard implements CanActivate {
-  authService = inject(AuthService);
- router = inject(Router);
 
-  canActivate(): boolean {
-    if (this.authService.isAuthenticated()) {  
-      return true; // Si está logueado lo dejamos pasasr 
-    }
+export const AuthGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-    this.router.navigate(['/login']); 
-    return false;
+  if (authService.isAuthenticated()) {
+    return true;
   }
-}
+  //  Guardamos  la URL para redirigir después del login!
+  authService.redirectUrl = route.url.map(segment => segment.path).join('/');
+  router.navigate(['/login']);
+  return false;
+};

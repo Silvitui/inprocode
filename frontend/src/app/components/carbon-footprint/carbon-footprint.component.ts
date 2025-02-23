@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
 import { Chart, ChartOptions, registerables } from 'chart.js';
 
-Chart.register(...registerables);
+Chart.register(...registerables); //habilita todas las funcionalidades de chartjs 
 
 @Component({
   selector: 'app-carbon-footprint',
@@ -9,10 +9,12 @@ Chart.register(...registerables);
   styleUrls: ['./carbon-footprint.component.scss']
 })
 export class CarbonFootprintComponent implements OnChanges, AfterViewInit {
+  chart!: Chart;
   @Input() carbonEmissions: { [key: string]: number } = {}; 
   @Input() selectedTransport: string = ''; 
-  @ViewChild('chartCanvas') chartCanvas!: { nativeElement: HTMLCanvasElement };
-  private chart!: Chart;
+  @ViewChild('chartCanvas') chartCanvas!: { nativeElement: HTMLCanvasElement }; // chartjs necesita manipular directamente el DOM por eso usamos viewchild. 
+   
+ 
 
   ngAfterViewInit(): void {
     this.initializeChart();

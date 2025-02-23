@@ -12,9 +12,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  private router = inject(Router);
-  private authService = inject(AuthService);
-  private fb = inject(FormBuilder);
+   router = inject(Router);
+authService = inject(AuthService);
+ fb = inject(FormBuilder);
 
   registerForm: FormGroup = this.fb.group({
     userName: ['', [Validators.required, Validators.minLength(3)]],
@@ -35,7 +35,7 @@ export class RegisterComponent {
     this.authService.registerUser(userData).subscribe({
       next: () => {
         console.log('✅ Registro exitoso');
-        this.router.navigate(['/login']); // 🔥 Redirigir al login tras registrarse
+        this.router.navigate(['/login']); 
       },
       error: (error) => {
         console.error('Error en registro:', error);

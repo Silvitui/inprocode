@@ -220,7 +220,7 @@ export const seedDB = async () => {
     console.log('Places inserted:', insertedPlaces);
 
     const carbonEmissionRates: { [key: string]: number } = {
-      car: 192, 
+      car: 192, // gramos de co2
       train: 41,
       bus: 105,
       bike: 0,
@@ -231,7 +231,7 @@ export const seedDB = async () => {
       1: 3.47, 
       2: 2.24, 
       3: 1.09, 
-      4: 0.89, 
+      4: 1.89, 
       5: 1.46
   };
   

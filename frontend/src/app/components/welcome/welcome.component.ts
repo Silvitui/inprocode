@@ -14,13 +14,7 @@ export class WelcomeComponent {
   router = inject(Router);
   authService = inject(AuthService);
   isMenuOpen = false;
-
-  constructor() {
-    effect(() => {
-      console.log("🔄 Estado de autenticación actualizado:", this.authService.isAuthenticated());
-    });
-  }
-
+ 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }

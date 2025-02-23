@@ -1,0 +1,20 @@
+<dialog class="modal modal-bottom sm:modal-middle" [attr.open]="openModal ? true : null">
+    <div class="modal-box w-full max-w-lg">
+      <h3 class="font-bold text-lg mb-4">📍 Activities for {{ selectedDate | date:'longDate' }}</h3>
+  
+      <p class="text-sm text-gray-600 mb-4">
+        {{ dayDescription }}
+      </p>
+  
+      <ul class="list-disc pl-4 space-y-1">
+        @for (event of events; track event.title) {
+          <li>{{ event.title }}</li>
+        }
+      </ul>
+  
+      <div class="modal-action justify-center">
+        <button class="btn btn-primary btn-sm" (click)="close()">Close</button>
+      </div>
+    </div>
+  </dialog>
+  

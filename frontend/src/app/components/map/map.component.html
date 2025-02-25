@@ -20,14 +20,24 @@
         <button class="btn btn-outline btn-xs sm:btn-sm w-auto text-xs sm:text-sm" (click)="changeDay(4)">Day 4</button>
         <button class="btn btn-outline btn-xs sm:btn-sm w-auto text-xs sm:text-sm" (click)="changeDay(5)">Day 5</button>
       </div>
+
+      <div class="flex flex-wrap gap-2 p-2 bg-dark rounded shadow mb-2">
+        @for (category of categories; track category) {
+          <label class="flex items-center gap-1 text-sm">
+            <input type="checkbox" [value]="category" (change)="onFilterChange($event)" checked>
+            {{ category | titlecase }}
+          </label>
+        }
+      </div>
+
       <div class="relative w-full h-[160px] sm:h-[300px] md:h-[400px] lg:h-[500px] border-4 border-blue-600 rounded-lg shadow-lg">
         <div id="map" class="w-full h-full rounded-lg"></div>
       </div>
 
-<app-transport-selector (transportSelected)="selectTransport($event)"></app-transport-selector>
-
+      <app-transport-selector (transportSelected)="selectTransport($event)"></app-transport-selector>
 
     </div>
+
     <div class="w-full sm:w-[350px] flex flex-col sm:flex-row justify-center mt-4 sm:mt-0">
       <app-carbon-footprint 
         [carbonEmissions]="carbonEmissions()" 
@@ -36,5 +46,4 @@
     </div>
 
   </div>
-
 </div>

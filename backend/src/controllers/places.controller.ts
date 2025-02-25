@@ -23,6 +23,7 @@ export const createPlace = async (req: Request, res: Response) => {
     }
 };
 
+
 export const getPlaces = async (_req: Request, res: Response) => {
     try {
         const places = await Place.find();
@@ -48,6 +49,48 @@ export const getPlaceById = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Error en getPlaceById:", error);
         res.status(500).json({ error: "Error al obtener el lugar" });
+        return;
+    }
+};
+
+
+export const deletePlaceByName = async (req: Request, res: Response) => {
+    try {
+        const { name } = req.params;
+
+       
+        const deletedPlace = await Place.findOneAndDelete({ name });
+
+        if (!deletedPlace) {
+            res.status(404).json({ error: "Lugar no encontrado" });
+            return;
+        }
+
+        res.status(200).json({ message: "Lugar eliminado correctamente", place: deletedPlace });
+        return;
+    } catch (error) {
+        console.error("Error en deletePlaceByName:", error);
+        res.status(500).json({ error: "Error al eliminar el lugar" });
+        return;
+    }
+};
+
+export const updatePlaceByName = async (req: Request, res: Response) => {
+    try {
+        const { name } = req.params;
+        const updates = req.body;
+        const updatedPlace = await Place.findOneAndUpdate({ name }, updates, { new: true });
+
+        if (!updatedPlace) {
+            res.status(404).json({ error: "Lugar no encontrado" });
+            return;
+        }
+
+        res.status(200).json({ message: "Lugar actualizado correctamente", place: updatedPlace });
+        return;
+    } catch (error) {
+        console.error("Error en updatePlaceByName:", error);
+        res.status(500).json({ error: "Error al actualizar el lugar" });
         return;
     }
 };

@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(options))
-app.use(morgan('dev')); // sirve para visualizar en consola las peticiones http que llegan al backend
+app.use(morgan('dev')); // sirve para visualizar en la consola las peticiones http que llegan al backend
 
 app.get('/', (_req: Request, res: Response) => {
     res.send('Hello World 🎈🎃🎊🎉✨');
@@ -36,6 +36,6 @@ app.use("/api/itineraries",  itineraryRouter);
 
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
+    console.log(`Server is running on port http://localhost:${PORT}💛`);
     DBconnection()
 })

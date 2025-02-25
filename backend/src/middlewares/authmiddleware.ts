@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { NextFunction, Response } from "express";
 import process from 'process';
-import { AuthenticatedRequest } from '../utils/types/types';
+import { AuthenticatedRequest } from '../interfaces/types';
 
 export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const token = req.cookies.authToken; // Leer el token desde las cookies

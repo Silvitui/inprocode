@@ -2,7 +2,31 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
-import { AuthenticatedRequest } from "../utils/types/types";
+import { AuthenticatedRequest } from "../interfaces/types";
+
+
+export const getAuthenticatedUser = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId; // Extrae el ID del usuario desde el token
+        if (!userId) {
+            res.status(401).json({ error: "No autorizado" });
+            return 
+        }
+
+        const user = await User.findById(userId).select("-password"); // No devolvemos la contraseña
+        if (!user) {
+            res.status(404).json({ error: "Usuario no encontrado" });
+            return 
+        }
+
+        res.status(200).json(user);
+        return 
+    } catch (error) {
+        console.error("Error en getAuthenticatedUser:", error);
+        res.status(500).json({ error: "Error al obtener usuario" });
+        return 
+    }
+};
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
@@ -52,10 +76,10 @@ export const loginUser = async (req: Request, res: Response) => {
         });
 
         res.cookie("authToken", token, {
-            httpOnly: true,  //  Protege la cookie
+            httpOnly: true,  //  Protege la cookie de javascript
             secure: process.env.NODE_ENV === "production", //  Solo en HTTPS en producción
             sameSite: "strict", // Previene ataques CSRF
-            maxAge: 60 * 60 * 1000, // 1 hora
+            maxAge: 60 * 60 * 1000, // 1 hora de autorización 
         });
 
         res.status(200).json({ message: "Inicio de sesión exitoso" });

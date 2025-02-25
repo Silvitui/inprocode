@@ -43,7 +43,7 @@ export class AuthService {
       tap(() => {
         this.isAuthenticated.set(true); 
         console.log('Login');
-        const targetUrl = this.redirectUrl || '/welcome';
+        const targetUrl = this.redirectUrl || "/";
         this.redirectUrl = null;  
         this.router.navigateByUrl(targetUrl);
       }),

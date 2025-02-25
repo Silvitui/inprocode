@@ -72,7 +72,8 @@ export class CalendarComponent implements OnInit {
         '-' + String(eventDate.getDate()).padStart(2, '0'); //* FullCalendar espera fechas en formato claro YYYY-MM-DD.  Esta línea formatea la fecha correctamente para coincidir exactamente con ese formato. El guión separa,getMonth() devuelve el mes actual en formato número 0 (enero) 11 (diciembre)   por eso le suma +1 , para ajustar el mes correcto, luego con padstart aseguramos q ue la cadena tenga siempre dos dígitos.**//
       return [...day.activities, day.lunch, day.dinner]
         .filter(Boolean) // Filtra los lugares que no existen (undefined) para evitar errores.
-        .map((place: Place) => ({
+        .map((place: Place, index) => ({
+          _id: `${formattedDate}-${index}`,
           title: place.name,
           start: formattedDate,
           category: place.category ?? "activity"
@@ -93,7 +94,7 @@ export class CalendarComponent implements OnInit {
       '-' + String(clickedDate.getMonth() + 1).padStart(2, '0') +
       '-' + String(clickedDate.getDate()).padStart(2, '0');
     const eventsForDay = this.events().filter(({ start }) => start === clickedDateStr);
-    if (!eventsForDay.length) console.warn("⚠️ No se encontraron eventos para esta fecha.");
+    if (!eventsForDay.length) console.warn(" No se encontraron eventos para esta fecha.");
     this.selectedDayEvents.set({ date: clickedDate, events: eventsForDay });
     this.dayDetailModalOpen.set(true);
   }

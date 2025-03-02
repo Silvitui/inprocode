@@ -14,7 +14,6 @@ export class WelcomeComponent {
   router = inject(Router);
   authService = inject(AuthService);
   isMenuOpen = false;
- 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }

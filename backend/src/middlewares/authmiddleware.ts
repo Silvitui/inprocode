@@ -14,7 +14,9 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
   
     try {
       const decoded = jwt.verify(token, secret);
-      req.user = decoded as JwtPayload; // Guardamos los datos del usuario en `req.user` , JWPayload es el tipo de datos que devuelve jwt.verify (código desencriptado)
+      console.log("Contenido del token:", decoded);
+      req.user = decoded as JwtPayload & { userId?: string };
+ // Guardamos los datos del usuario en `req.user` , JWPayload es el tipo de datos que devuelve jwt.verify (código desencriptado)
       next();
       return;
     } catch (error) {

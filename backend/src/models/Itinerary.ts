@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const ItinerarySchema = new mongoose.Schema({
-  city: { type: String, required: true, unique: true },
+  city: { type: String, required: true},
   days: [
     {
       day: Number,
@@ -9,7 +9,7 @@ const ItinerarySchema = new mongoose.Schema({
       activities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Place" }], 
       lunch: { type: mongoose.Schema.Types.ObjectId, ref: "Place" }, 
       dinner: { type: mongoose.Schema.Types.ObjectId, ref: "Place" },
-      distance: { type: Number, required: true },
+      distance: { type: Number},
       transportation: {
         type: Map, // Usamos un mapa para guardar emisiones por cada transporte
         of: Number, // Cada valor será un número que representa la emisión de CO2

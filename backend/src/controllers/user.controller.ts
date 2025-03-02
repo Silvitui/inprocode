@@ -18,3 +18,4 @@ export const getAllUsers = async (_req: AuthenticatedRequest, res: Response) => 
         return 
     }
 };
+

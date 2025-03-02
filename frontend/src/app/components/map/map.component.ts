@@ -182,7 +182,5 @@ export class MapComponent implements OnInit {
     this.map.fitBounds(bounds, { padding: 50, maxZoom: 15 });
   }
 
-  goBack() {
-    this.router.navigate(['/']);
-  }
+
 }

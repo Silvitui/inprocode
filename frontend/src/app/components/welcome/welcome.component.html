@@ -1,60 +1,8 @@
-<div class="text-gray-900 flex flex-col items-center w-full min-h-screen md:h-screen md:overflow-hidden">
-
-  <header class="w-full fixed shadow-md px-4 sm:px-6 z-50 flex justify-between items-center py-3 bg-white">
-    <img src="/assets/planitGo_cropped.png" alt="PlanItGo ECO Logo" class="h-10 sm:h-12 md:h-16 w-auto">
-    <nav class="hidden md:flex space-x-4 lg:space-x-8">
-      <a href="#" class="hover:text-green-500 text-sm md:text-base">About</a>
-      <a routerLink="/map" class="hover:text-green-500 text-sm md:text-base">Destinations</a>
-      <a routerLink="/calendar" class="hover:text-green-500 text-sm md:text-base">Calendar</a>
-    </nav>
-    <div class="hidden md:flex space-x-2 lg:space-x-4">
-      @if (authService.isAuthenticated()) { 
-        <button (click)="logout()" class="btn btn-outline btn-xs md:btn-sm text-green-700 border-green-700 hover:bg-green-400 hover:text-white">
-          Logout
-        </button>
-      } @else { 
-        <button (click)="goToLogin()" class="btn btn-outline btn-xs md:btn-sm text-green-700 border-green-700 hover:bg-green-600 hover:text-white">
-          Login
-        </button>
-        <button (click)="goToRegister()" class="btn btn-primary btn-xs md:btn-sm bg-green-700 hover:bg-green-800 text-white">
-          Register
-        </button>
-      }
-    </div>
-    <button (click)="toggleMenu()" class="md:hidden btn btn-outline text-green-700 border-green-700" aria-label="Toggle navigation menu">
-      <span [class.hidden]="isMenuOpen">☰</span>
-      <span [class.hidden]="!isMenuOpen">✖</span>
-    </button>
-  </header>
-
-  <div class="relative w-full pt-20">
-    @if (isMenuOpen) {
-      <nav class="absolute top-16 left-0 right-0 bg-white shadow-md border-t border-gray-200 rounded-b-lg py-4 flex flex-col items-center md:hidden" aria-label="Mobile navigation">
-        <a href="#" class="py-2 hover:text-green-500 text-sm">About</a>
-        <a routerLink="/map" class="py-2 hover:text-green-500 text-sm">Destinations</a>
-        <a routerLink="/calendar" class="py-2 hover:text-green-500 text-sm">Calendar</a>
-
-        @if (authService.isAuthenticated()) { 
-          <button (click)="logout()" class="mt-2 btn btn-outline btn-sm text-green-700 border-green-700 hover:bg-green-600 hover:text-white">
-            Logout
-          </button>
-        } @else { 
-          <button (click)="goToLogin()" class="mt-2 btn btn-outline btn-sm text-green-700 border-green-700 hover:bg-green-600 hover:text-white">
-            Login
-          </button>
-          <button (click)="goToRegister()" class="mt-2 btn btn-primary btn-sm bg-green-700 hover:bg-green-800 text-white">
-            Register
-          </button>
-        }
-      </nav>
-    }
-  </div>
 
   <main class="hero min-h-screen flex flex-col md:flex-row items-center justify-center px-4 sm:px-10 md:px-20 mt-20 md:mt-0">
     <section class="w-full md:w-1/2 flex justify-center">
       <img src="/assets/planitlogo.png" class="rounded-xl max-w-[220px] sm:max-w-sm md:max-w-lg" alt="PlanItGo ECO">
     </section>
-
     <section class="w-full md:w-1/2 text-center md:text-left mt-6 md:mt-0 px-4 sm:px-8">
       <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight text-green-900">
         Sustainable Travel Starts Here
@@ -68,4 +16,4 @@
     </section>
   </main>
 
-</div>
+

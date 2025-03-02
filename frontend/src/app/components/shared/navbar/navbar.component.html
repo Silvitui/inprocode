@@ -1,0 +1,55 @@
+<header class="p-2 sm:p-6 relative shadow-md flex justify-between items-center bg-white">
+  <img src="/assets/planitGo_cropped.png" alt="PlanItGo ECO Logo" class="h-10 sm:h-12 md:h-16 w-auto">
+
+  <nav class="hidden md:flex space-x-4 lg:space-x-8">
+    <a routerLink="/welcome" class="hover:text-green-500 text-sm md:text-base">About</a>
+    <a routerLink="/map" class="hover:text-green-500 text-sm md:text-base">Destinations</a>
+    <a routerLink="/calendar" class="hover:text-green-500 text-sm md:text-base">Calendar</a>
+  </nav>
+
+  @if (authService.isAuthenticated()) { 
+    <div class="hidden md:flex space-x-2 lg:space-x-4 me-2">
+      <button (click)="logout()" class="btn btn-outline btn-xs md:btn-sm text-green-700 border-green-700 hover:bg-green-600 hover:text-white">
+        Logout
+      </button>
+    </div>
+  } @else { 
+    <div class="hidden md:flex space-x-2 lg:space-x-4 me-3">
+      <button (click)="goToLogin()" class="btn btn-outline btn-xs md:btn-sm text-green-700 border-green-700 hover:bg-green-600 hover:text-white">
+        Login
+      </button>
+      <button (click)="goToRegister()" class="btn btn-primary btn-xs md:btn-sm bg-green-700 hover:bg-green-800 text-white">
+        Register
+      </button>
+    </div>
+  }
+  <button (click)="toggleMenu()" class="md:hidden btn btn-outline text-green-700 border-green-700 me-3" aria-label="Toggle navigation menu">
+    @if (!isMenuOpen()) {
+      <span>☰</span>
+    } @else { 
+      <span>✖</span>
+    }
+  </button>
+</header>
+
+
+@if (isMenuOpen()) {
+  <div class="relative w-full bg-white shadow-md border-t border-gray-200 py-4 flex flex-col items-center md:hidden transition-all duration-300">
+    <a routerLink="/welcome" class="py-2 hover:text-green-500 text-sm">About</a>
+    <a routerLink="/map" class="py-2 hover:text-green-500 text-sm">Destinations</a>
+    <a routerLink="/calendar" class="py-2 hover:text-green-500 text-sm">Calendar</a>
+
+    @if (authService.isAuthenticated()) { 
+      <button (click)="logout()" class="mt-2 btn btn-outline btn-sm text-green-700 border-green-700 hover:bg-green-600 hover:text-white">
+        Logout
+      </button>
+    } @else { 
+      <button (click)="goToLogin()" class="mt-2 btn btn-outline btn-sm text-green-700 border-green-700 hover:bg-green-600 hover:text-white">
+        Login
+      </button>
+      <button (click)="goToRegister()" class="mt-2 btn btn-primary btn-sm bg-green-700 hover:bg-green-800 text-white">
+        Register
+      </button>
+    }
+  </div>
+}

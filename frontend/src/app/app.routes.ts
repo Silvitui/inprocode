@@ -1,16 +1,25 @@
 import { Routes } from '@angular/router';
-import { WelcomeComponent } from './components/welcome/welcome.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { MapComponent } from './components/map/map.component';
-import { AuthGuard } from './guards/auth.guard'; 
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { LayoutComponent } from './components/layout/layout.component';
+import { AuthGuard } from './guards/auth.guard';  
 
 export const routes: Routes = [
-    { path: '', component: WelcomeComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-    { path: 'map', component: MapComponent, canActivate: [AuthGuard] }, 
-    {path : "calendar", component: CalendarComponent, canActivate: [AuthGuard]},
-    { path: '**', redirectTo: 'home' }
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+  { path: 'login', loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) },
+  { path: 'register', loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent) },
+  {path: '',component: LayoutComponent,
+    children: [
+      { path: 'welcome', loadComponent: () => import('./components/welcome/welcome.component').then(m => m.WelcomeComponent) },
+      { 
+        path: 'map', 
+        loadComponent: () => import('./components/map/map.component').then(m => m.MapComponent),
+        canActivate: [AuthGuard]  
+      },
+      { 
+        path: 'calendar', 
+        loadComponent: () => import('./components/calendar/calendar.component').then(m => m.CalendarComponent),
+        canActivate: [AuthGuard] 
+      }
+    ]
+  },
+  { path: '**', redirectTo: 'welcome' }
 ];

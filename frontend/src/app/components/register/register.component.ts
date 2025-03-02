@@ -43,4 +43,8 @@ authService = inject(AuthService);
       }
     });
   }
+  goToWelcome(): void {
+    this.router.navigate(['/welcome']);
+  }
+  
 }

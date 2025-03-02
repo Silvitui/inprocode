@@ -40,5 +40,8 @@ export class LoginComponent {
       }
     });
   }
+  goToWelcome(): void {
+    this.router.navigate(['/welcome']);
+  }
   
 }

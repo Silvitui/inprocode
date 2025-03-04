@@ -23,7 +23,7 @@ export class DayDetailModalComponent implements OnChanges {
 
   generateDayDescription() {
     const titles = this.events.map(e => e.title);
-
+// esto de aquí lo debería poner en el backend. 
     if (titles.includes('Sagrada Familia')) {
       this.dayDescription.set(`
         Start your day marveling at Gaudí's masterpiece, the Sagrada Familia.

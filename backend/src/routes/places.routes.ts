@@ -5,6 +5,4 @@ const placesRouter = Router();
 
 placesRouter.get("/", getPlaces);
 placesRouter.get("/:id", getPlaceById);
-
-
 export default placesRouter;

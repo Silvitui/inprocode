@@ -14,8 +14,6 @@ export class CarbonFootprintComponent implements OnChanges, AfterViewInit {
   @Input() selectedTransport: string = ''; 
   @ViewChild('chartCanvas') chartCanvas!: { nativeElement: HTMLCanvasElement }; // chartjs necesita manipular directamente el DOM por eso usamos viewchild. 
    
- 
-
   ngAfterViewInit(): void {
     this.initializeChart();
   }
@@ -69,7 +67,6 @@ export class CarbonFootprintComponent implements OnChanges, AfterViewInit {
 
   updateChart() {
     if (!this.chart) return;
-
     const transportLabels = Object.keys(this.carbonEmissions);
     const emissionValues = Object.values(this.carbonEmissions);
     const transportColors = this.getTransportColors();

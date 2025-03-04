@@ -8,12 +8,14 @@ export interface Place {
 export interface Day {
   day: number;
   activities: Place[];  
-  lunch: Place;         
-  dinner: Place;        
+  lunch: Place | null;         
+  dinner: Place | null;        
 }
 
 export interface Itinerary {
-  _id: string; 
+  _id?: string;
   city: string;
   days: Day[];
+  startDate?: string; // Guardamos la fecha de inicio en formato "YYYY-MM-DD"
 }
+

@@ -7,11 +7,10 @@ import cookieParser from 'cookie-parser';
 import { DBconnection } from './DB/connection';
 import userRouter from './routes/user.routes';
 import authRouter from './routes/auth.routes';
-
 import placesRouter from './routes/places.routes';
-import authMiddleware from './middlewares/authMiddleware';
 import { options } from './utils/config/cors';
 import itineraryRouter from './routes/itineraries.routes';
+import { authMiddleware } from './middlewares/authMiddleware';
 
 
 const app = express();

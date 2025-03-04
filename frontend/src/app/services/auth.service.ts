@@ -15,9 +15,7 @@ export class AuthService {
   isAuthenticated = signal(false);
   redirectUrl: string | null = null;
 
-  constructor() {
-    this.checkAuthStatus(); 
-  }
+
   checkAuthStatus(): void { 
     this.http.get<boolean>(`${this.apiUrl}/check-auth`, { withCredentials: true }).subscribe({
       next: (isAuthenticated) => this.isAuthenticated.set(isAuthenticated),

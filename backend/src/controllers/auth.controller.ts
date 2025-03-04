@@ -12,7 +12,6 @@ export const getAuthenticatedUser = async (req: AuthenticatedRequest, res: Respo
             res.status(401).json({ error: "No autorizado" });
             return 
         }
-
         const user = await User.findById(userId).select("-password"); // No devolvemos la contraseña
         if (!user) {
             res.status(404).json({ error: "Usuario no encontrado" });

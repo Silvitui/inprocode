@@ -21,9 +21,7 @@ authService = inject(AuthService);
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
-
   errorMessage = signal<string>('');
-
   onSubmit(): void {
     if (this.registerForm.invalid) {
       this.errorMessage.set('Por favor, completa todos los campos correctamente.');
@@ -34,7 +32,7 @@ authService = inject(AuthService);
 
     this.authService.registerUser(userData).subscribe({
       next: () => {
-        console.log('✅ Registro exitoso');
+        console.log('Registro completado');
         this.router.navigate(['/login']); 
       },
       error: (error) => {

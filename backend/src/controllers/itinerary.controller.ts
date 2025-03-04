@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Itinerary from "../models/Itinerary";
 import { AuthenticatedRequest, Day, ProcessedDay } from "../interfaces/types";
 import User from "../models/User";
-import mongoose from "mongoose";
+
 
 // Tabla de emisiones de carbono por tipo de transporte
 const carbonEmissionRates: { [key: string]: number } = {
@@ -96,10 +96,15 @@ export const createItinerary = async (req: AuthenticatedRequest, res: Response) 
       ...day,
       transportation: calculateEmissions(day.distance)
     }));
-    const newItinerary = new Itinerary({ city, days: processedDays });
-    await newItinerary.save();
+    // const newItinerary = new Itinerary({ city, days: processedDays });
+    const newItinerary = await Itinerary.create({ city, days: processedDays });
+    console.log("Se ha creado el itinerario nuevo en la base de datos:", newItinerary)
     // Se asocia el itinerario al usuario agregándolo a savedTrips
-    await User.findByIdAndUpdate(userId, { $push: { savedTrips: newItinerary._id } });
+    const update = await User.findByIdAndUpdate(userId, { $push: { savedTrips: newItinerary._id } });
+    if (!update) {
+      res.status(404).json({ error: "Usuario no encontrado" });
+      return;
+    } 
     console.log("Itinerario guardado en bbdd usuario:", newItinerary);
     res.status(201).json(newItinerary);
     return;
@@ -138,91 +143,3 @@ export const getEmissionsByTransport = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Actualiza el nombre de un lugar dentro del itinerario.
- * (Endpoint original para actualizar el nombre de un lugar)
- */
-export const updatePlaceNameInItinerary = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const userId = req.user?.userId;
-    const { itineraryId, placeId } = req.params;
-    const { newName } = req.body;
-    if (!newName) {
-      res.status(400).json({ error: "El nuevo nombre es obligatorio" });
-      return;
-    }
-    const user = await User.findById(userId);
-    if (!user || !user.savedTrips.includes(itineraryId as unknown as mongoose.Types.ObjectId)) {
-      res.status(404).json({ error: "Itinerario no encontrado en savedTrips" });
-      return;
-    }
-    const itinerary = await Itinerary.findById(itineraryId).populate("days.activities days.lunch days.dinner");
-    if (!itinerary) {
-      res.status(404).json({ error: "Itinerario no encontrado" });
-      return;
-    }
-    let placeUpdated = false;
-    for (const day of itinerary.days) {
-      day.activities.forEach((place) => {
-        if (place.toString() === placeId) {
-          (place as unknown as { name: string }).name = newName;
-          placeUpdated = true;
-        }
-      });
-      if (day.lunch && day.lunch._id.toString() === placeId) {
-        (day.lunch as unknown as { _id: mongoose.Types.ObjectId, name: string }).name = newName;
-        placeUpdated = true;
-      }
-      if (day.dinner && day.dinner._id.toString() === placeId) {
-        (day.dinner as unknown as { _id: mongoose.Types.ObjectId, name: string }).name = newName;
-        placeUpdated = true;
-      }
-    }
-    if (!placeUpdated) {
-      res.status(404).json({ error: "Lugar no encontrado en el itinerario" });
-      return;
-    }
-    await itinerary.save();
-    res.status(200).json({ message: "Nombre del lugar actualizado correctamente", itinerary });
-    return;
-  } catch (error) {
-    console.error("Error en updatePlaceNameInItinerary:", error);
-    res.status(500).json({ error: "Error al actualizar el nombre del lugar" });
-    return;
-  }
-};
-
-/**
- * Actualiza el nombre del trip cambiando el campo "city" del itinerario.
- * Se espera recibir en los parámetros { itineraryId } y en el body { newCity }.
- * Se verifica que el itinerario esté en savedTrips del usuario.
- */
-export const updateTripCity = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const userId = req.user?.userId;
-    const { itineraryId } = req.params;
-    const { newCity } = req.body;
-    if (!newCity) {
-      res.status(400).json({ error: "El nuevo nombre (newCity) es obligatorio" });
-      return;
-    }
-    const user = await User.findById(userId);
-    if (!user || !user.savedTrips.includes(itineraryId as unknown as mongoose.Types.ObjectId)) {
-      res.status(404).json({ error: "Itinerario no encontrado en savedTrips" });
-      return;
-    }
-    const itinerary = await Itinerary.findById(itineraryId);
-    if (!itinerary) {
-      res.status(404).json({ error: "Itinerario no encontrado" });
-      return;
-    }
-    itinerary.city = newCity;
-    await itinerary.save();
-    res.status(200).json({ message: "Nombre del trip actualizado correctamente", itinerary });
-    return;
-  } catch (error) {
-    console.error("Error en updateTripCity:", error);
-    res.status(500).json({ error: "Error al actualizar el nombre del trip" });
-    return;
-  }
-};

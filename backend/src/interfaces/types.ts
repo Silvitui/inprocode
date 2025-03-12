@@ -17,3 +17,10 @@ export interface Day {
 export interface ProcessedDay extends Day {
     transportation: { [key: string]: number };
 }
+
+export interface IItinerary {
+    _id: string;
+    city: string;
+    startDate: Date;
+    days: Day[];
+  }

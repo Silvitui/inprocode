@@ -244,78 +244,80 @@ export const seedDB = async () => {
   };
   
   const itinerary = {
-      city: 'Barcelona',
-      days: [
-          {
-              day: 1,
-              title: 'Sustainable Architecture and Culture',
-              activities: [
-                  getPlaceId('Sagrada Familia'),
-                  getPlaceId('Hospital de Sant Pau'),
-                  getPlaceId('Parc del Guinardó'),
-                  getPlaceId('Bunkers del Carmel'),
-                  getPlaceId('Parc Güell'),
-              ],
-              lunch: getPlaceId('Quinoa Bar Vegetarià'),
-              dinner: null,
-              distance: distancesByDay[1],
-              transportation: calculateEmissions(distancesByDay[1]) // Guardamos todas las emisiones
-          },
-          {
-              day: 2,
-              title: 'Scenic Views and Slow Culture',
-              activities: [
-                  getPlaceId('Montjuïc'),
-                  getPlaceId('Castillo de Montjuïc'),
-                  getPlaceId('Jardines de Mossèn Costa i Llobera'),
-              ],
-              lunch: null,
-              dinner: getPlaceId('Terraza Martínez'),
-              distance: distancesByDay[2],
-              transportation: calculateEmissions(distancesByDay[2])
-          },
-          {
-              day: 3,
-              title: 'Slow Living and Responsible Shopping in El Born and Gothic',
-              activities: [
-                  getPlaceId('Parc de la Ciutadella'),
-                  getPlaceId('Taller de Artesanía Sostenible en El Born'),
-                  getPlaceId('Barcelona Slow Fashion')
-              ],
-              lunch: getPlaceId('Wynwood Café'),
-              dinner: getPlaceId('Alive Restaurant'),
-              distance: distancesByDay[3],
-              transportation: calculateEmissions(distancesByDay[3])
-          },
-          {
-              day: 4,
-              title: 'Historic Center and Traditions',
-              activities: [
-                  getPlaceId('Barri Gòtic'),
-                  getPlaceId('Museu de la Xocolata'),
-                  getPlaceId('Museu Picasso'),
-                  getPlaceId('Mercat de Santa Caterina')
-              ],
-              lunch: getPlaceId('Hummus Barcelona'),
-              dinner: getPlaceId('Casa Bonay – Libertine'),
-              distance: distancesByDay[4],
-              transportation: calculateEmissions(distancesByDay[4])
-          },
-          {
-              day: 5,
-              title: 'Beach and Relaxation',
-              activities: [
-                  getPlaceId('Platja de la Barceloneta'),
-                  getPlaceId('Passeig Marítim'),
-                  getPlaceId('Port Olímpic')
-              ],
-              lunch: getPlaceId('Blueproject Foundation Café'),
-              dinner: getPlaceId('Rasoterra'),
-              distance: distancesByDay[5],
-              transportation: calculateEmissions(distancesByDay[5])
-          }
-      ]
+    city: 'Barcelona',
+    startDate: new Date("2023-03-15"), 
+    days: [
+      {
+        day: 1,
+        title: 'Sustainable Architecture and Culture',
+        activities: [
+          getPlaceId('Sagrada Familia'),
+          getPlaceId('Hospital de Sant Pau'),
+          getPlaceId('Parc del Guinardó'),
+          getPlaceId('Bunkers del Carmel'),
+          getPlaceId('Parc Güell'),
+        ],
+        lunch: getPlaceId('Quinoa Bar Vegetarià'),
+        dinner: null,
+        distance: distancesByDay[1],
+        transportation: calculateEmissions(distancesByDay[1])
+      },
+      {
+        day: 2,
+        title: 'Scenic Views and Slow Culture',
+        activities: [
+          getPlaceId('Montjuïc'),
+          getPlaceId('Castillo de Montjuïc'),
+          getPlaceId('Jardines de Mossèn Costa i Llobera'),
+        ],
+        lunch: null,
+        dinner: getPlaceId('Terraza Martínez'),
+        distance: distancesByDay[2],
+        transportation: calculateEmissions(distancesByDay[2])
+      },
+      {
+        day: 3,
+        title: 'Slow Living and Responsible Shopping in El Born and Gothic',
+        activities: [
+          getPlaceId('Parc de la Ciutadella'),
+          getPlaceId('Taller de Artesanía Sostenible en El Born'),
+          getPlaceId('Barcelona Slow Fashion')
+        ],
+        lunch: getPlaceId('Wynwood Café'),
+        dinner: getPlaceId('Alive Restaurant'),
+        distance: distancesByDay[3],
+        transportation: calculateEmissions(distancesByDay[3])
+      },
+      {
+        day: 4,
+        title: 'Historic Center and Traditions',
+        activities: [
+          getPlaceId('Barri Gòtic'),
+          getPlaceId('Museu de la Xocolata'),
+          getPlaceId('Museu Picasso'),
+          getPlaceId('Mercat de Santa Caterina')
+        ],
+        lunch: getPlaceId('Hummus Barcelona'),
+        dinner: getPlaceId('Casa Bonay – Libertine'),
+        distance: distancesByDay[4],
+        transportation: calculateEmissions(distancesByDay[4])
+      },
+      {
+        day: 5,
+        title: 'Beach and Relaxation',
+        activities: [
+          getPlaceId('Platja de la Barceloneta'),
+          getPlaceId('Passeig Marítim'),
+          getPlaceId('Port Olímpic')
+        ],
+        lunch: getPlaceId('Blueproject Foundation Café'),
+        dinner: getPlaceId('Rasoterra'),
+        distance: distancesByDay[5],
+        transportation: calculateEmissions(distancesByDay[5])
+      }
+    ]
   };
+  
   
     console.log('Itinerary created:', itinerary);
     await Itinerary.create(itinerary);

@@ -1,0 +1,10 @@
+<app-map-view 
+  [markers]="markers()" 
+  [route]="route()" 
+  [selectedDay]="selectedDay()" 
+  [selectedTransport]="selectedTransport()" 
+  [carbonEmissions]="carbonEmissions()" 
+  (transportChange)="selectTransport($event)" 
+  (dayChange)="changeDay($event)">
+</app-map-view>
+

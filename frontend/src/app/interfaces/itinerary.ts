@@ -16,6 +16,6 @@ export interface Itinerary {
   _id?: string;
   city: string;
   days: Day[];
-  startDate?: string; // Guardamos la fecha de inicio en formato "YYYY-MM-DD"
+  startDate: Date; // Guardamos la fecha de inicio en formato "YYYY-MM-DD"
 }
 

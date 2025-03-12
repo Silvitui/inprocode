@@ -1,0 +1,21 @@
+<dialog class="modal modal-bottom sm:modal-middle" open>
+    <div class="modal-box">
+      <h3 class="font-bold text-lg mb-4">Edit or Delete Activity</h3>
+      
+      <div class="mb-4">
+        <label class="block mb-2">Activity Name:</label>
+        <input 
+          type="text" 
+          [(ngModel)]="editedName" 
+          class="input input-bordered w-full" 
+          placeholder="Enter new activity name" />
+      </div>
+  
+      <div class="modal-action justify-end space-x-2">
+        <button class="btn btn-outline" (click)="onCancel()">Cancel</button>
+        <button class="btn btn-error" (click)="onDelete()">Delete</button>
+        <button class="btn btn-primary" (click)="onSave()">Save</button>
+      </div>
+    </div>
+  </dialog>
+  

@@ -1,0 +1,32 @@
+<div class="calendar-container p-4 bg-white shadow rounded-lg w-full max-w-4xl mx-auto">
+  <h2 class="text-2xl font-bold mb-4 text-center">📅 Your Sustainable Calendar</h2>
+
+  <button class="btn btn-primary btn-sm mb-4 w-full sm:w-auto" (click)="openTripModal()">
+    ➕ Add Trip
+  </button>
+
+  <div class="overflow-auto">
+    <full-calendar [options]="calendarOptions" class="w-full"></full-calendar>
+  </div>
+
+  @if (tripModalOpen()) {
+    <app-trip-modal (saveTrip)="onSaveTrip($event)" (closeModal)="tripModalOpen.set(false)"></app-trip-modal>
+  }
+
+  @if (dayDetailModalOpen() && selectedDayEvents()) {
+    <app-day-detail-modal 
+      [selectedDate]="selectedDayEvents()!.date"
+      [events]="selectedDayEvents()!.events"
+      [currentItinerary]="currentItinerary()"
+      (close)="dayDetailModalOpen.set(false)">
+    </app-day-detail-modal>
+  }
+
+  @if (toastMessage()) {
+    <div class="toast toast-center toast-middle ">
+      <div class="alert bg-blue-200 font-bold ">
+        <span>{{ toastMessage()!.text }}</span>
+      </div>
+    </div>
+  }
+</div>

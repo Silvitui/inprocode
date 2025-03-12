@@ -1,70 +1,112 @@
-import { Component, Input, OnChanges, SimpleChanges, signal } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CalendarEvent } from '../../interfaces/calendar';
+import { Itinerary, Day, Place } from '../../interfaces/itinerary';
+import { UserService } from '../../services/user.service';
+import { EditDeleteModalComponent } from '../edit-delete-modal/edit-delete-modal.component';
 
 @Component({
   selector: 'app-day-detail-modal',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './day-detail-modal.component.html'
+  imports: [CommonModule, EditDeleteModalComponent],
+  templateUrl: './day-detail-modal.component.html',
+  styleUrls: ['./day-detail-modal.component.scss']
 })
 export class DayDetailModalComponent implements OnChanges {
-  @Input() selectedDate!: Date;
-  @Input() events: { title: string; start: string }[] = [];
+  userService = inject(UserService);
 
-  openModal = signal(true);
+  @Input() selectedDate: Date | null = null;
+  @Input() events: CalendarEvent[] = [];
+  @Input() currentItinerary: Itinerary | null = null; // Saved trip del usuario
+  openModal = signal(false);
+  editModalOpen = signal(false);
   dayDescription = signal('');
+  activityToEdit: string | null = null;
 
-  ngOnChanges(changes: SimpleChanges): void { // objeto que angular pasa con todos los inputs que acaban de cambiar
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['events'] && this.events.length > 0) {
       this.generateDayDescription();
       this.openModal.set(true);
     }
   }
 
-  generateDayDescription() {
+  generateDayDescription(): void {
     const titles = this.events.map(e => e.title);
-// esto de aquí lo debería poner en el backend. 
     if (titles.includes('Sagrada Familia')) {
-      this.dayDescription.set(`
-        Start your day marveling at Gaudí's masterpiece, the Sagrada Familia.
-        Continue to explore the modernist wonder of Hospital de Sant Pau, then immerse yourself 
-        in nature at Parc del Guinardó and Bunkers del Carmel, ending your journey at Parc Güell. 
-        Recharge energy at Quinoa Bar Vegetarià. A day filled with sustainable beauty and inspiring architecture!
-      `);
+      this.dayDescription.set(`Start your day marveling at Gaudí's masterpiece, the Sagrada Familia...`);
     } else if (titles.includes('Montjuïc')) {
-      this.dayDescription.set(`
-        Today is all about stunning views and slow-paced exploration.
-        Visit Montjuïc and the historic Castillo de Montjuïc, followed by a peaceful stroll 
-        through Jardines de Mossèn Costa i Llobera. Conclude with a memorable dinner at Terraza Martínez, 
-        overlooking Barcelona's skyline.
-      `);
-    } else if (titles.includes('Parc de la Ciutadella')) {
-      this.dayDescription.set(`
-        Enjoy slow living in the charming streets of El Born and Gothic.
-        Begin your morning in Parc de la Ciutadella, then explore sustainable craft workshops 
-        and responsible shopping experiences at Taller de Artesanía and Barcelona Slow Fashion. 
-        Delicious meals await you at Wynwood Café and Alive Restaurant!
-      `);
-    } else if (titles.includes('Barri Gòtic')) {
-      this.dayDescription.set(`
-        Dive deep into Barcelona's historic heart and culinary traditions.
-        Wander through Barri Gòtic, discover sweet history at Museu de la Xocolata, explore 
-        iconic art at Museu Picasso, and embrace local flavors at Mercat de Santa Caterina. 
-        Lunch at Hummus Barcelona, finishing the day in style at Casa Bonay – Libertine.
-      `);
-    } else if (titles.includes('Platja de la Barceloneta')) {
-      this.dayDescription.set(`
-        Your final day invites relaxation and coastal charm.
-        Enjoy the sun at Platja de la Barceloneta, stroll leisurely along Passeig Marítim, 
-        and experience the vibrant atmosphere of Port Olímpic. Nourish your body at Blueproject 
-        Foundation Café, concluding your trip sustainably at Rasoterra.
-      `);
+      this.dayDescription.set(`Today is all about stunning views and slow-paced exploration at Montjuïc...`);
     } else {
       this.dayDescription.set('Enjoy your sustainable journey discovering beautiful Barcelona!');
     }
+    console.log("Day description generated:", this.dayDescription());
   }
 
-  close() {
+  close(): void {
     this.openModal.set(false);
+  }
+  openEditModal(activityName: string): void {
+    console.log("Open edit-delete modal for activity:", activityName);
+    this.activityToEdit = activityName;
+    this.editModalOpen.set(true);
+  }
+
+
+  handleEditSave(newName: string): void {
+    if (!this.currentItinerary) return;
+    const oldName = this.activityToEdit;
+    if (!oldName) return;
+    if (!this.currentItinerary._id) {
+      console.error("❌ Cannot update itinerary because _id is missing.");
+      return;
+    }
+    const updatedDays: Day[] = this.currentItinerary.days.map(day => ({
+      ...day,
+      activities: day.activities.map(activity =>
+        activity.name === oldName ? { ...activity, name: newName } : activity
+      )
+    }));
+    console.log("Updating itinerary for edit with updatedDays:", updatedDays);
+    this.userService.updateUserTrip(this.currentItinerary._id!, { days: updatedDays }).subscribe({
+      next: (updatedTrip) => {
+        console.log("✅ Activity edited successfully:", updatedTrip);
+        this.currentItinerary = updatedTrip;
+        this.editModalOpen.set(false);
+      },
+      error: (err) => console.error("❌ Error editing activity:", err)
+    });
+  }
+
+ 
+  handleDelete(): void {
+    if (!this.currentItinerary) return;
+    const activityName = this.activityToEdit;
+    if (!activityName) return;
+    if (!this.currentItinerary._id) {
+      console.error(" Cannot update itinerary because _id is missing.");
+      return;
+    }
+    const updatedDays: Day[] = this.currentItinerary.days.map(day => ({
+      ...day,
+      activities: day.activities.filter(activity => activity.name !== activityName)
+    }));
+    console.log("Updating itinerary for deletion with updatedDays:", updatedDays);
+    this.userService.updateUserTrip(this.currentItinerary._id!, { days: updatedDays }).subscribe({
+      next: (updatedTrip) => {
+        console.log("✅ Activity deleted successfully:", updatedTrip);
+        this.currentItinerary = updatedTrip;
+        this.editModalOpen.set(false);
+      },
+      error: (err) => console.error("Error deleting activity:", err)
+    });
+  }
+
+  trackEvent(index: number, event: CalendarEvent): string {
+    return event.title;
+  }
+  
+
+  cancelEdit(): void {
+    this.editModalOpen.set(false);
   }
 }

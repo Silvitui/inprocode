@@ -26,11 +26,6 @@ export class EditDeleteModalComponent {
       this.saveEdit.emit(this.editedName.trim());
     }
   }
-
-  onDelete(): void {
-    this.deleteActivity.emit();
-  }
-
   onCancel(): void {
     this.cancel.emit();
   }

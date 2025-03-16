@@ -14,14 +14,16 @@
   }
 
   @if (dayDetailModalOpen() && selectedDayEvents()) {
-    <app-day-detail-modal 
+    <app-day-detail-modal
       [selectedDate]="selectedDayEvents()!.date"
       [events]="selectedDayEvents()!.events"
       [currentItinerary]="currentItinerary()"
+      (updatedItinerary)="onUpdatedTrip($event)" 
       (close)="dayDetailModalOpen.set(false)">
     </app-day-detail-modal>
   }
-
+  
+  
   @if (toastMessage()) {
     <div class="toast toast-center toast-middle ">
       <div class="alert bg-blue-200 font-bold ">

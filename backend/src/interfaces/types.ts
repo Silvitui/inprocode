@@ -1,6 +1,7 @@
 import { Request } from "express";
 import jwt from "jsonwebtoken";
 
+
 export interface AuthenticatedRequest extends Request {
     user?: jwt.JwtPayload;
 }
@@ -23,4 +24,5 @@ export interface IItinerary {
     city: string;
     startDate: Date;
     days: Day[];
-  }
+}
+

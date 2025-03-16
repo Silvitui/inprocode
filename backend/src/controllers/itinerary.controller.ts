@@ -58,7 +58,7 @@ export const getItineraryByCity = async (req: Request, res: Response): Promise<v
 };
 
 /**
- * Obtiene los lugares de un día específico de un itinerario.
+ * Obtiene los lugares de un día específico de un itinerario para poder enseñarlos en el modal 
  */
 export const getPlacesByDay = async (req: Request, res: Response) => {
   try {

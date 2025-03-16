@@ -7,9 +7,6 @@ const userRouter = Router();
 userRouter.get('/all', getAllUsers);
 userRouter.post('/saveTrip', authMiddleware, saveUserTrip);
 userRouter.get('/savedTrips', authMiddleware, getUserSavedTrips);
-userRouter.put('/savedTrips/:id', authMiddleware, updateUserTrip);
-
-
-
+userRouter.patch('/savedTrips/:id', authMiddleware, updateUserTrip);
 
 export default userRouter;

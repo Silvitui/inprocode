@@ -44,7 +44,7 @@ export class CarbonFootprintComponent implements OnChanges, AfterViewInit {
     const transportColors = this.getTransportColors();
 
     this.chart = new Chart(this.chartCanvas.nativeElement, {
-      type: 'bar',
+      type: 'bar', // gráfico tipo barra
       data: {
         labels: transportLabels.map(t => t.toUpperCase()),
         datasets: [{
@@ -59,7 +59,7 @@ export class CarbonFootprintComponent implements OnChanges, AfterViewInit {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { beginAtZero: true }
+          y: { beginAtZero: true } // q el eje comience en 0 
         }
       } as ChartOptions
     });
@@ -67,12 +67,12 @@ export class CarbonFootprintComponent implements OnChanges, AfterViewInit {
 
   updateChart() {
     if (!this.chart) return;
-    const transportLabels = Object.keys(this.carbonEmissions);
-    const emissionValues = Object.values(this.carbonEmissions);
+    const transportLabels = Object.keys(this.carbonEmissions); 
+    const emissionValues = Object.values(this.carbonEmissions); // extraigo emisiones 
     const transportColors = this.getTransportColors();
     this.chart.data.labels = transportLabels.map(t => t.toUpperCase());
     this.chart.data.datasets[0].data = emissionValues;
-    this.chart.data.datasets[0].backgroundColor = transportLabels.map(t => transportColors[t] || '#000000');
+    this.chart.data.datasets[0].backgroundColor = transportLabels.map(t => transportColors[t] || '#000000');  // Asigno los colores a cada transporte, usando negro por defecto si no se encuentra un color.
     this.chart.update();
   }
 }

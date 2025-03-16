@@ -1,7 +1,9 @@
 import { Response } from "express";
-import { AuthenticatedRequest } from "../interfaces/types";
+import {AuthenticatedRequest } from "../interfaces/types";
 import User from "../models/User";
 import Itinerary from "../models/Itinerary";
+import Place from "../models/Places";
+
 
 export const getAllUsers = async (_req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
@@ -18,8 +20,6 @@ export const getAllUsers = async (_req: AuthenticatedRequest, res: Response): Pr
     return;
   }
 };
-
-
 
 export const saveUserTrip = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
@@ -53,7 +53,6 @@ export const saveUserTrip = async (req: AuthenticatedRequest, res: Response): Pr
 };
 
 
-
 export const getUserSavedTrips = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.userId;
@@ -80,31 +79,53 @@ export const getUserSavedTrips = async (req: AuthenticatedRequest, res: Response
   }
 };
 
-export const updateUserTrip = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+
+
+export const updateUserTrip = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = req.user?.userId;
-    const itineraryId = req.params.id; 
-    const updatedData = req.body; 
-
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized: please log in" });
-      return;
+    const { id } = req.params;
+    const { oldActivityName, newActivityName } = req.body;
+    if (!oldActivityName || !newActivityName) {
+      res.status(400).json({ error: "Missing oldActivityName or newActivityName" });
+      return 
     }
+    const itinerary = await Itinerary.findById(id)
+      .populate("days.activities")
+      .populate("days.lunch")
+      .populate("days.dinner")
+      .exec();
 
-    const updatedTrip = await Itinerary.findByIdAndUpdate(
-      itineraryId,
-      updatedData,
-      { new: true }
-    ).populate("days.activities days.lunch days.dinner");
-
-    if (!updatedTrip) {
+    if (!itinerary) {
       res.status(404).json({ error: "Trip not found" });
-      return;
+      return 
+    }
+    let updated = false;
+
+    for (const day of itinerary.days) {
+      for (const activity of day.activities) {
+        if (activity && typeof activity === "object" && "name" in activity) {  
+          const activityName = (activity as { name: string }).name; //  Forzamos a TypeScript a reconocer name ya que no me reconoce porque es un OBJECT.ID
+    
+          if (activityName.trim().toLowerCase() === oldActivityName.trim().toLowerCase()) {
+            console.log(` Cambiando "${activityName}" -> "${newActivityName}"`);
+            await Place.findByIdAndUpdate(activity._id, { name: newActivityName });
+            updated = true;
+          }
+        } else {
+          console.warn("Actividad sin nombre :", activity);
+        }
+      }
+    }
+    
+    if (!updated) {
+      res.status(400).json({ error: "error" });
+      return 
     }
 
-    res.status(200).json(updatedTrip);
+    console.log(" Itinerario actualizado correctamente en la BD 🤑.");
+    res.status(200).json(itinerary);
   } catch (error) {
-    console.error("Error updating trip:", error);
+    console.error("❌ Error actualizando el viaje:", error);
     res.status(500).json({ error: "Error updating trip" });
   }
 };

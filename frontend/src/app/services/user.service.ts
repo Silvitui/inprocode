@@ -25,8 +25,8 @@ export class UserService {
     );
   }
   
-  updateUserTrip(itineraryId: string, updatedData: Partial<Itinerary>): Observable<Itinerary> {
-    return this.http.put<Itinerary>(`${this.apiUrl}/savedTrips/${itineraryId}`, updatedData, { withCredentials: true });
+  updateUserTrip(itineraryId: string, updateData: { oldActivityName: string, newActivityName: string }): Observable<Itinerary> {
+    return this.http.patch<Itinerary>(`${this.apiUrl}/savedTrips/${itineraryId}`, updateData, { withCredentials: true });
   }
   
 }

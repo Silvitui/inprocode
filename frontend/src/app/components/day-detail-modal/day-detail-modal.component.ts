@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarEvent } from '../../interfaces/calendar';
 import { Itinerary, Day, Place } from '../../interfaces/itinerary';
@@ -18,6 +18,9 @@ export class DayDetailModalComponent implements OnChanges {
   @Input() selectedDate: Date | null = null;
   @Input() events: CalendarEvent[] = [];
   @Input() currentItinerary: Itinerary | null = null; // Saved trip del usuario
+  @Output() updatedItinerary = new EventEmitter<Itinerary>();
+
+  
   openModal = signal(false);
   editModalOpen = signal(false);
   dayDescription = signal('');
@@ -56,52 +59,25 @@ export class DayDetailModalComponent implements OnChanges {
     if (!this.currentItinerary) return;
     const oldName = this.activityToEdit;
     if (!oldName) return;
-    if (!this.currentItinerary._id) {
-      console.error("❌ Cannot update itinerary because _id is missing.");
-      return;
-    }
-    const updatedDays: Day[] = this.currentItinerary.days.map(day => ({
-      ...day,
-      activities: day.activities.map(activity =>
-        activity.name === oldName ? { ...activity, name: newName } : activity
-      )
-    }));
-    console.log("Updating itinerary for edit with updatedDays:", updatedDays);
-    this.userService.updateUserTrip(this.currentItinerary._id!, { days: updatedDays }).subscribe({
+  
+    this.userService.updateUserTrip(this.currentItinerary._id!, {
+      oldActivityName: oldName,
+      newActivityName: newName
+    }).subscribe({
       next: (updatedTrip) => {
-        console.log("✅ Activity edited successfully:", updatedTrip);
-        this.currentItinerary = updatedTrip;
+        this.currentItinerary = updatedTrip;  // Actualiza el itinerario en el modal
         this.editModalOpen.set(false);
+        const updatedEvents = this.events.map(event =>
+          event.title === oldName ? { ...event, title: newName } : event
+        );
+  
+        this.events = updatedEvents;
+        this.updatedItinerary.emit(updatedTrip); 
       },
       error: (err) => console.error("❌ Error editing activity:", err)
     });
   }
-
- 
-  handleDelete(): void {
-    if (!this.currentItinerary) return;
-    const activityName = this.activityToEdit;
-    if (!activityName) return;
-    if (!this.currentItinerary._id) {
-      console.error(" Cannot update itinerary because _id is missing.");
-      return;
-    }
-    const updatedDays: Day[] = this.currentItinerary.days.map(day => ({
-      ...day,
-      activities: day.activities.filter(activity => activity.name !== activityName)
-    }));
-    console.log("Updating itinerary for deletion with updatedDays:", updatedDays);
-    this.userService.updateUserTrip(this.currentItinerary._id!, { days: updatedDays }).subscribe({
-      next: (updatedTrip) => {
-        console.log("✅ Activity deleted successfully:", updatedTrip);
-        this.currentItinerary = updatedTrip;
-        this.editModalOpen.set(false);
-      },
-      error: (err) => console.error("Error deleting activity:", err)
-    });
-  }
-
-  trackEvent(index: number, event: CalendarEvent): string {
+  trackEvent(event: CalendarEvent): string {
     return event.title;
   }
   

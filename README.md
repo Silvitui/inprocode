@@ -2,9 +2,9 @@
 
 ## 🚀 Project Overview
 This project is an Angular-based web application that integrates multiple plugins and features useful for real-world applications. The goal is to develop a sustainable travel app that includes a **map**, a **calendar**, and **charts** while storing all data in a **MongoDB database** via a **Node.js backend**.
-💚 Made with love and passion for sustainable travel! 🌍✨
+💚 Made with love 🌍✨
 
-## 📌 Features
+##  Features
 ### ✅ Level 1
 - **Navigation Menu**: Includes links to:
   - Home 🏡
@@ -14,10 +14,11 @@ This project is an Angular-based web application that integrates multiple plugin
 - **Full CRUD API** in Node.js + MongoDB.
 - **User Itineraries**: Users can save and manage their sustainable travel plans.
 ### 🏡 Home Page
-![Home Page](frontend/src/assets/images/captu1.png)
+![Home Page](frontend/public/assets/images/captu1.png)
+
 
 ### Login 
-![Home Page](frontend/src/assets/images/captu2.png)
+![Login Page](frontend/public/assets/images/captu2.png)
 
 
 ### ✅ Level 2
@@ -25,14 +26,14 @@ This project is an Angular-based web application that integrates multiple plugin
   - Multiple categories of markers (e.g., eco-friendly hotels, restaurants, and attractions).
   - Filter locations dynamically with dropdowns or checkboxes.
 - ### 🏡 Home Page
-![Map](frontend/src/assets/images/captu3.png)
+![Map](frontend/src/public/images/captu3.png)
 
 ### ✅ Level 3
 - **Event Editing in Calendar**:
   - Users can **edit** their events via a **modal**.
   - Updated data is **sent to the API** and stored in the database.
 - ### 🏡 Home Page
-![Calendar](frontend/src/assets/images/captu4.png)
+![Calendar](frontend/src/public/images/captu4.png)
 
 ---
 

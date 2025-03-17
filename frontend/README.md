@@ -1,59 +1,137 @@
-# Frontend
+# 🌍 Sustainable Travel App - PlanItGo ECO
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.4.
+## 🚀 Project Overview
+This project is an Angular-based web application that integrates multiple plugins and features useful for real-world applications. The goal is to develop a sustainable travel app that includes a **map**, a **calendar**, and **charts** while storing all data in a **MongoDB database** via a **Node.js backend**.
+💚 Made with love and passion for sustainable travel! 🌍✨
 
-## Development server
+## 📌 Features
+### ✅ Level 1
+- **Navigation Menu**: Includes links to:
+  - Home 🏡
+  - Map 🗺️
+  - Calendar 📅 (FullCalendar integration)
+  - Charts 📊 (Chart.js integration)
+- **Full CRUD API** in Node.js + MongoDB.
+- **User Itineraries**: Users can save and manage their sustainable travel plans.
+### 🏡 Home Page
+![Home Page](frontend/src/assets/images/captu1.png)
 
-To start a local development server, run:
+### Login 
+![Home Page](frontend/src/assets/images/captu2.png)
 
-```bash
-ng serve
+
+### ✅ Level 2
+- **Advanced Map Filtering**:
+  - Multiple categories of markers (e.g., eco-friendly hotels, restaurants, and attractions).
+  - Filter locations dynamically with dropdowns or checkboxes.
+- ### 🏡 Home Page
+![Map](frontend/src/assets/images/captu3.png)
+
+### ✅ Level 3
+- **Event Editing in Calendar**:
+  - Users can **edit** their events via a **modal**.
+  - Updated data is **sent to the API** and stored in the database.
+- ### 🏡 Home Page
+![Calendar](frontend/src/assets/images/captu4.png)
+
+---
+
+## 🛠️ Tech Stack
+### Frontend
+- **Angular** + **Tailwind CSS**
+- **FullCalendar** (for event management)
+- **Chart.js** (for visualization)
+- **Mapbox** (for interactive maps)
+
+### Backend
+- **Node.js** + **Express.js**
+- **MongoDB** (Mongoose ODM)
+- **REST API** for data persistence
+
+---
+
+## 🏗️ Setup Instructions
+### 1️⃣ Clone the Repository
+```sh
+ https://github.com/Silvitui/inprocode.git
+ cd inprocode
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+### 2️⃣ Install Dependencies
+#### 📌 Backend
+```sh
+ cd backend
+ npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
+#### 📌 Frontend
+```sh
+ cd frontend
+ npm install
 ```
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
+### 3️⃣ Start the Development Servers
+#### 🚀 Start the Backend
+```sh
+ cd backend
+ npm run dev
+```
+#### 🚀 Start the Frontend
+```sh
+ cd frontend
+ ng serve -o
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+# 🌍 Backend Documentation 
+## 🚀 Overview
+The backend for **PlanItGo ECO** is built using **Node.js** and **Express.js**, with **MongoDB** as the database. It provides a REST API to manage **users**, **itineraries**, and **places** for sustainable travel.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 🛠️ Tech Stack
+- **Node.js** + **Express.js** (Server)
+- **MongoDB** (Database)
+- **Mongoose** (ODM for MongoDB)
+- **JWT Authentication** (For user login and sessions)
+- **CORS** (Cross-Origin Resource Sharing)
 
-```bash
-ng test
+---
+---
+## 📂 Project Structure
+```
+backend/
+│── controllers/       # API controllers
+│── models/            # Mongoose schemas
+│── routes/            # Express routes
+│── middlewares/       # Middleware functions
+│── config/            # Configuration files
+│── server.ts          # Main server file
+│── .env               # Environment variables
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## 🌟 Features in Detail
+### 🗺️ Map (Mapbox)
+- Displays eco-friendly locations.
+- Users can **filter markers** based on categories.
 
-```bash
-ng e2e
-```
+### 📅 Calendar (FullCalendar)
+- Users can **edit name of the events**.
+- Events are **stored in MongoDB**.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### 📊 Charts (Chart.js)
+- Displays **carbon footprint statistics**.
+- Compares **different transport emissions**.
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+## 🤝 Contribution
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+---
+
+
+---
+

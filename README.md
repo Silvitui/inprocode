@@ -14,12 +14,12 @@ This project is an Angular-based web application that integrates multiple plugin
 - **Full CRUD API** in Node.js + MongoDB.
 - **User Itineraries**: Users can save and manage their sustainable travel plans.
 ### 🏡 Home Page
-<img src="frontend/public/assets/images/captu1.png"  width="400">
+<img src="frontend/public/assets/images/captu1.png"  width="500">
 
 
 
 ### Login 
-<img src="frontend/public/assets/images/captu2.png"  width="400">
+<img src="frontend/public/assets/images/captu2.png"  width="500">
 
 
 
@@ -27,8 +27,8 @@ This project is an Angular-based web application that integrates multiple plugin
 - **Advanced Map Filtering**:
   - Multiple categories of markers (e.g., eco-friendly hotels, restaurants, and attractions).
   - Filter locations dynamically with dropdowns or checkboxes.
-- ### 🏡Map Page
-<img src="frontend/public/assets/images/captu3.png"  width="400">
+- ### Map Page
+<img src="frontend/public/assets/images/captu3.png"  width="500">
 
 
 ### ✅ Level 3
@@ -36,7 +36,7 @@ This project is an Angular-based web application that integrates multiple plugin
   - Users can **edit** their events via a **modal**.
   - Updated data is **sent to the API** and stored in the database.
 - ### Calendar Page
-<img src="frontend/public/assets/images/captu4.png" width="400">
+<img src="frontend/public/assets/images/captu4.png" width="500">
 
 
 ---

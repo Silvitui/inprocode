@@ -1,7 +1,7 @@
 export const options = {
     origin: "http://localhost:4200", // permite solicitudes solo desde el frontend
     credentials: true, // Permite enviar cookies con las solicitudes
-    methods: ["GET", "POST", "PATCH", "DELETE"], // Métodos permitidos
+    methods: ["GET", "POST", "PUT", "DELETE","PATCH"], // Métodos permitidos
     allowedHeaders: ["Content-Type", "Authorization"] // Headers permitidos
   }
 

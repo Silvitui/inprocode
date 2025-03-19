@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarEvent } from '../../interfaces/calendar';
-import { Itinerary, Day, Place } from '../../interfaces/itinerary';
+import { Itinerary } from '../../interfaces/itinerary';
 import { UserService } from '../../services/user.service';
-import { EditDeleteModalComponent } from '../edit-delete-modal/edit-delete-modal.component';
 
 @Component({
   selector: 'app-day-detail-modal',
   standalone: true,
-  imports: [CommonModule, EditDeleteModalComponent],
+  imports: [CommonModule],
   templateUrl: './day-detail-modal.component.html',
   styleUrls: ['./day-detail-modal.component.scss']
 })
@@ -17,14 +16,11 @@ export class DayDetailModalComponent implements OnChanges {
 
   @Input() selectedDate: Date | null = null;
   @Input() events: CalendarEvent[] = [];
-  @Input() currentItinerary: Itinerary | null = null; // Saved trip del usuario
-  @Output() updatedItinerary = new EventEmitter<Itinerary>();
+  @Input() currentItinerary: Itinerary | null = null; // Guardar trip del usuario
+  @Output() updatedItinerary = new EventEmitter<{ action: string; activity: CalendarEvent }>();
 
-  
   openModal = signal(false);
-  editModalOpen = signal(false);
   dayDescription = signal('');
-  activityToEdit: string | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['events'] && this.events.length > 0) {
@@ -42,47 +38,21 @@ export class DayDetailModalComponent implements OnChanges {
     } else {
       this.dayDescription.set('Enjoy your sustainable journey discovering beautiful Barcelona!');
     }
-    console.log("Day description generated:", this.dayDescription());
+    console.log("📝 Day description generated:", this.dayDescription());
   }
 
   close(): void {
     this.openModal.set(false);
   }
-  openEditModal(activityName: string): void {
-    console.log("Open edit-delete modal for activity:", activityName);
-    this.activityToEdit = activityName;
-    this.editModalOpen.set(true);
-  }
 
-
-  handleEditSave(newName: string): void {
-    if (!this.currentItinerary) return;
-    const oldName = this.activityToEdit;
-    if (!oldName) return;
-  
-    this.userService.updateUserTrip(this.currentItinerary._id!, {
-      oldActivityName: oldName,
-      newActivityName: newName
-    }).subscribe({
-      next: (updatedTrip) => {
-        this.currentItinerary = updatedTrip;  // Actualiza el itinerario en el modal
-        this.editModalOpen.set(false);
-        const updatedEvents = this.events.map(event =>
-          event.title === oldName ? { ...event, title: newName } : event
-        );
-  
-        this.events = updatedEvents;
-        this.updatedItinerary.emit(updatedTrip); 
-      },
-      error: (err) => console.error("❌ Error editing activity:", err)
+  handleDeleteActivity(activity: CalendarEvent): void {
+    this.updatedItinerary.emit({
+      action: 'delete',
+      activity
     });
   }
-  trackEvent(event: CalendarEvent): string {
-    return event.title;
-  }
-  
 
-  cancelEdit(): void {
-    this.editModalOpen.set(false);
+  trackEvent(event: CalendarEvent): string {
+    return event._id;
   }
 }

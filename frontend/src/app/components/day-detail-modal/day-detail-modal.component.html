@@ -9,11 +9,11 @@
     </p>
 
     <ul class="list-disc pl-4 space-y-2">
-      @for ( event of events; track event.title) {
+      @for (event of events; track event._id) {
         <li class="flex justify-between items-center bg-gray-100 p-2 rounded-md shadow-sm">
           <span>{{ event.title }}</span>
           <div class="flex space-x-2">
-            <button class="btn btn-xs btn-outline" (click)="openEditModal(event.title)">✏️</button>
+            <button class="btn btn-xs btn-error text-white" (click)="handleDeleteActivity(event)">🗑️</button>
           </div>
         </li>
       }
@@ -24,12 +24,3 @@
     </div>
   </div>
 </dialog>
-
-@if (editModalOpen()) {
-  <app-edit-delete-modal 
-    [activityName]="activityToEdit || ''"
-    (saveEdit)="handleEditSave($event)"
-   
-    (cancel)="cancelEdit()">
-  </app-edit-delete-modal>
-}

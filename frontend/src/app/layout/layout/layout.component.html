@@ -1,7 +1,12 @@
-<div class="flex flex-col h-screen bg-[url('/assets/calming-woods.jpg')] bg-cover bg-center">
+<div class="flex flex-col min-h-screen">
+  <img
+    ngSrc="/assets/calming-woods.jpg" fill class="object-cover absolute inset-0 -z-10" >
+<!--inset 0 coloca la imagen en los bordes del contenedor   y -z.10  cubre todo  -->
   <app-navbar class="flex-none"></app-navbar>
-  <div class="flex-1 overflow-auto p-4">
+
+  <main class="flex-1 p-4">
     <router-outlet></router-outlet>
-  </div>
+  </main>
+
   <app-footer class="flex-none py-2 bg-transparent"></app-footer>
 </div>

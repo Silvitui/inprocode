@@ -1,7 +1,7 @@
 <div class="calendar-container p-4 bg-white shadow rounded-lg w-full max-w-4xl mx-auto">
   <h2 class="text-2xl font-bold mb-4 text-center">📅 Your Sustainable Calendar</h2>
 
-  <button class="btn btn-primary btn-sm mb-4 w-full sm:w-auto" (click)="openTripModal()">
+  <button class="btn btn-primary btn-sm mb-4 w-full sm:w-auto" (click)="tripModalOpen.set(true)">
     ➕ Add Trip
   </button>
 
@@ -10,7 +10,7 @@
   </div>
 
   @if (tripModalOpen()) {
-    <app-trip-modal (saveTrip)="onSaveTrip($event)" (closeModal)="tripModalOpen.set(false)"></app-trip-modal>
+    <app-trip-modal (saveTrip)="savedTrips()" (closeModal)="tripModalOpen.set(false)"></app-trip-modal>
   }
 
   @if (dayDetailModalOpen() && selectedDayEvents()) {
@@ -18,17 +18,8 @@
       [selectedDate]="selectedDayEvents()!.date"
       [events]="selectedDayEvents()!.events"
       [currentItinerary]="currentItinerary()"
-      (updatedItinerary)="onUpdatedTrip($event)" 
+      (updatedItinerary)="loadUserSavedTrips()"
       (close)="dayDetailModalOpen.set(false)">
     </app-day-detail-modal>
-  }
-  
-  
-  @if (toastMessage()) {
-    <div class="toast toast-center toast-middle ">
-      <div class="alert bg-blue-200 font-bold ">
-        <span>{{ toastMessage()!.text }}</span>
-      </div>
-    </div>
   }
 </div>

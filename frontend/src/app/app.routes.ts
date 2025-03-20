@@ -7,6 +7,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) },
   { path: 'register', loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent) },
+  { path: 'about', loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent) },
 
   // Ruta con fondo woods
   { 

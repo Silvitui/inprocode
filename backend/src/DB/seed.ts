@@ -228,11 +228,11 @@ export const seedDB = async () => {
   };
   
   const distancesByDay: { [key: number]: number } = {
-      1: 3.47, 
+      1: 5.47, 
       2: 2.24, 
-      3: 1.09, 
+      3: 4.09, 
       4: 1.89, 
-      5: 1.46
+      5: 3.46
   };
   
   const calculateEmissions = (distance: number) => {

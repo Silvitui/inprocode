@@ -19,16 +19,15 @@ export class MapViewComponent implements AfterViewInit, OnChanges {
   @Input() selectedDay: number = 1;
   @Input() selectedTransport: string = 'car';
   @Input() carbonEmissions: { [key: string]: number } = {};
+  @Input() selectedCategories: string[] = [];
   @Output() transportChange = new EventEmitter<string>();
   @Output() dayChange = new EventEmitter<number>();
-
   @Output() categoryFilterChange = new EventEmitter<string[]>();
 
   @ViewChild('mapContainer') mapContainer: any;
   map!: mapboxgl.Map;
   currentMarkers: mapboxgl.Marker[] = [];
-  availableCategories = ['Park', 'Restaurant', 'Museum', 'Historical', 'Shopping'];
-  selectedCategories = signal<string[]>([]);
+  availableCategories = ['park', 'restaurant', 'museum', 'landmark', 'viewpoint', 'market', 'shop'];
 
   ngAfterViewInit(): void {
     this.initializeMap();
@@ -54,59 +53,66 @@ export class MapViewComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  updateMap(): void {
-    this.currentMarkers.forEach(marker => marker.remove());
-    this.currentMarkers = [];
-    this.markers.forEach(markerData => {
-      const marker = new mapboxgl.Marker({ color: markerData.color })
-        .setLngLat(markerData.coordinates)
-        .setPopup(new mapboxgl.Popup().setHTML(`<h3>${markerData.label}</h3>`))
-        .addTo(this.map);
-      this.currentMarkers.push(marker);
+updateMap(): void {
+  this.currentMarkers.forEach(marker => marker.remove());
+  this.currentMarkers = [];
+
+  //  Dibujar los marcadores filtrados
+  this.markers.forEach(markerData => {
+    const marker = new mapboxgl.Marker({ color: markerData.color })
+      .setLngLat(markerData.coordinates)
+      .setPopup(new mapboxgl.Popup().setHTML(`<h3>${markerData.label}</h3>`))
+      .addTo(this.map);
+    this.currentMarkers.push(marker);
+  });
+  const filteredCoordinates = this.markers.map(marker => marker.coordinates);
+  
+  if (filteredCoordinates.length >= 2) {
+    if (this.map.getSource('route')) {
+      this.map.removeLayer('route');
+      this.map.removeSource('route');
+    }
+
+    // esta es la línea de los puntos del mapa 
+    this.map.addSource('route', {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: filteredCoordinates 
+        }
+      }
     });
 
-    if (this.route && this.route.coordinates.length >= 2) {
-      if (this.map.getSource('route')) {
-        this.map.removeLayer('route');
-        this.map.removeSource('route');
-      }
+    this.map.addLayer({
+      id: 'route',
+      type: 'line',
+      source: 'route',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': '#1DB954', 'line-width': 4 }
+    });
 
-      this.map.addSource('route', {
-        type: 'geojson',
-        data: {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'LineString',
-            coordinates: this.route.coordinates
-          }
-        }
-      });
-
-      this.map.addLayer({
-        id: 'route',
-        type: 'line',
-        source: 'route',
-        layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: { 'line-color': '#1DB954', 'line-width': 4 }
-      });
-
-      const bounds = new mapboxgl.LngLatBounds();
-      this.route.coordinates.forEach(coord => bounds.extend(coord));
-      this.map.fitBounds(bounds, { padding: 50, maxZoom: 15 });
+    //  Ajustamos la vista del mapa a los puntos filtrados
+    const bounds = new mapboxgl.LngLatBounds();
+    filteredCoordinates.forEach(coord => bounds.extend(coord));
+    this.map.fitBounds(bounds, { padding: 50, maxZoom: 15 });
+  } else {
+    //  Si no hay suficientes puntos, elimino cualquier ruta existente
+    if (this.map.getSource('route')) {
+      this.map.removeLayer('route');
+      this.map.removeSource('route');
     }
   }
+}
+
+
   toggleCategory(category: string): void {
-    let updatedCategories = [...this.selectedCategories()];
-    
-    if (updatedCategories.includes(category)) {
-      updatedCategories = updatedCategories.filter(cat => cat !== category);
-    } else {
-      updatedCategories.push(category);
-    }
-  
-    this.selectedCategories.set(updatedCategories);
-    this.categoryFilterChange.emit(updatedCategories); 
+    this.categoryFilterChange.emit(
+      this.selectedCategories.includes(category)
+        ? this.selectedCategories.filter(cat => cat !== category)
+        : [...this.selectedCategories, category]
+    );
   }
-  
 }

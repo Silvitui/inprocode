@@ -63,6 +63,7 @@ export const getUserSavedTrips = async (req: AuthenticatedRequest, res: Response
       path: "savedTrips",
       populate: {
         path: "days.activities",
+        model: "Place",
         select: "name category coordinates"  
       }
     });

@@ -1,4 +1,4 @@
-<div class="calendar-container p-4 bg-white shadow rounded-lg w-full max-w-4xl mx-auto">
+<div class="calendar-container p-4 bg-white bg-opacity-80  shadow rounded-lg w-full max-w-4xl mx-auto">
   <h2 class="text-2xl font-bold mb-4 text-center">📅 Your Sustainable Calendar</h2>
 
   <button class="btn btn-primary btn-sm mb-4 w-full sm:w-auto" (click)="tripModalOpen.set(true)">
@@ -8,6 +8,16 @@
   <div class="overflow-auto">
     <full-calendar [options]="calendarOptions" class="w-full"></full-calendar>
   </div>
+  @if (toastMessage()) {
+    <div class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="bg-pink-400  text-black shadow-xl text-base px-6 py-3 rounded-lg max-w-xs text-center z-50">
+        {{ toastMessage()!.text }}
+      </div>
+    </div>
+  }
+  
+  
+  
 
   @if (tripModalOpen()) {
     <app-trip-modal (saveTrip)="onSaveTrip($event)" (closeModal)="tripModalOpen.set(false)"></app-trip-modal>

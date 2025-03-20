@@ -1,10 +1,18 @@
-<app-map-view 
-  [markers]="markers()" 
-  [route]="route()" 
-  [selectedDay]="selectedDay()" 
-  [selectedTransport]="selectedTransport()" 
-  [carbonEmissions]="carbonEmissions()" 
-  (transportChange)="selectTransport($event)" 
-  (dayChange)="changeDay($event)">
-</app-map-view>
-
+@if (!itinerary()) {
+  <div class="flex flex-col items-center justify-center h-[150px] bg-white bg-opacity-60 ">
+    <p class="text-4xl font-bold  text-yellow-700 mb-4">🗺 No trips found! 🙁 Start your journey by adding a trip.</p>
+    <button class="btn btn-accent text-lg px-6 py-3" (click)="redirectToCalendar()">Go to calendar, to add a trip!</button>
+  </div>
+} @else {
+  <app-map-view 
+    [markers]="markers()" 
+    [route]="route()" 
+    [selectedDay]="selectedDay()" 
+    [selectedTransport]="selectedTransport()" 
+    [carbonEmissions]="carbonEmissions()" 
+    [selectedCategories]="selectedCategories()" 
+    (transportChange)="selectTransport($event)" 
+    (dayChange)="changeDay($event)"
+    (categoryFilterChange)="updateSelectedCategories($event)">  
+  </app-map-view>
+}

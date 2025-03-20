@@ -3,10 +3,10 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItineraryService } from '../../../services/itinerary.service';
 import { CarbonFootprintService } from '../../../services/carbon-footprint.service';
-import { Day, Itinerary, Place } from '../../../interfaces/itinerary';
+import { Itinerary, Place } from '../../../interfaces/itinerary';
 import { MapMarker, MapRoute } from '../../../interfaces/mapa';
 import { MapViewComponent } from '../map-view/map-view.component';
-import { CarbonFootprintComponent } from '../../carbon-footprint/carbon-footprint.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map-container',
@@ -16,6 +16,7 @@ import { CarbonFootprintComponent } from '../../carbon-footprint/carbon-footprin
 })
 export class MapContainerComponent implements OnInit {
   itineraryService = inject(ItineraryService);
+  router = inject(Router);
   userService = inject(UserService);
   carbonFootprintService = inject(CarbonFootprintService);
 
@@ -27,6 +28,10 @@ export class MapContainerComponent implements OnInit {
   selectedDay = signal<number>(1);
   selectedTransport = signal<string>('car');
   selectedCategories = signal<string[]>([]);
+
+  redirectToCalendar(): void {
+    this.router.navigate(['/calendar']); 
+  }
 
   ngOnInit(): void {
     this.loadItinerary();
@@ -49,15 +54,16 @@ export class MapContainerComponent implements OnInit {
 
   computeMapData(): void {
     if (!this.itinerary()) return;
-
+  
     const dayData = this.itinerary()?.days.find(day => day.day === this.selectedDay());
     if (!dayData) return;
-
+  
     let places: Place[] = [...dayData.activities].filter(Boolean) as Place[];
     if (this.selectedCategories().length > 0) {
       places = places.filter(place => this.selectedCategories().includes(place.category));
     }
-
+  
+    // ✅ Solo agregamos marcadores de los lugares filtrados
     this.markers.set(
       places.map(place => ({
         coordinates: [place.coordinates.lng, place.coordinates.lat],
@@ -65,12 +71,17 @@ export class MapContainerComponent implements OnInit {
         color: 'green',
       }))
     );
-
-    this.route.set(places.length >= 2 ? { coordinates: places.map(p => [p.coordinates.lng, p.coordinates.lat]) } : null);
-
+  
+    //  Solo mostramos la ruta si hay al menos 2 lugares en el filtro
+    if (places.length >= 2) {
+      this.route.set({ coordinates: places.map(p => [p.coordinates.lng, p.coordinates.lat]) });
+    } else {
+      this.route.set(null); 
+    }
+  
     this.loadCarbonEmissions();
   }
-
+  
   loadCarbonEmissions(): void {
     if (!this.itinerary()) return;
     const city = this.itinerary()?.city ?? '';
@@ -108,6 +119,7 @@ export class MapContainerComponent implements OnInit {
     this.selectedDay.set(day);
     this.computeMapData();
   }
+
   updateSelectedCategories(categories: string[]): void {
     this.selectedCategories.set(categories);
     this.computeMapData();

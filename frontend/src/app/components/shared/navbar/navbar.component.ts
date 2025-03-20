@@ -15,14 +15,7 @@ export class NavbarComponent {
   authService = inject(AuthService);
   router = inject(Router);
   isAuthenticated = signal(this.authService.isAuthenticated());
-
-  constructor() {
-
-    effect(() => {
-      this.isAuthenticated.set(this.authService.isAuthenticated());
-    });
-  }
-
+  
   toggleMenu(): void {
     this.isMenuOpen.update(state => !state);
   }

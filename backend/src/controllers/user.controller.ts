@@ -34,16 +34,13 @@ export const saveUserTrip = async (req: AuthenticatedRequest, res: Response): Pr
       res.status(400).json({ error: "Datos inválidos" });
       return;
     }
-    // Crear un nuevo itinerario y convertir el startDate a Date
     const newItinerary = new Itinerary({ city, days, startDate: new Date(startDate) });
     await newItinerary.save();
     
-    // Asociar el nuevo itinerario al usuario (guardarlo en savedTrips)
     await User.findByIdAndUpdate(userId, { $push: { savedTrips: newItinerary._id } });
     
-    // Poblar los lugares antes de devolver la respuesta (activities, lunch, dinner)
     const populatedItinerary = await Itinerary.findById(newItinerary._id)
-      .populate("days.activities days.lunch days.dinner");
+      .populate("days.activities");
     
     console.log("✅ Itinerario guardado y persistido:", populatedItinerary);
     res.status(201).json(populatedItinerary);
@@ -65,7 +62,7 @@ export const getUserSavedTrips = async (req: AuthenticatedRequest, res: Response
     const user = await User.findById(userId).populate({
       path: "savedTrips",
       populate: {
-        path: "days.activities days.lunch days.dinner",
+        path: "days.activities",
         select: "name category coordinates"  
       }
     });
@@ -87,124 +84,113 @@ export const deleteUserTripActivity = async (req: AuthenticatedRequest, res: Res
     const { activityId } = req.body;
 
     if (!userId) {
-      res.status(401).json({ error: "No autorizado" });
-      return
+      res.status(401).json({ error: "Unauthorized" });
+      return;
     }
 
     if (!tripId || !activityId || !mongoose.Types.ObjectId.isValid(tripId) || !mongoose.Types.ObjectId.isValid(activityId)) {
-      res.status(400).json({ error: "Datos inválidos. Revisar tripId y activityId" });
-      return
+      res.status(400).json({ error: "Invalid data. Check tripId and activityId" });
+      return;
     }
+
     const user = await User.findById(userId);
-    if (!user || !user.savedTrips.includes(new mongoose.Types.ObjectId(tripId))) {
-      res.status(403).json({ error: "El trip no pertenece al usuario" });
-      return
+    if (!user || !user.savedTrips.includes(tripId as unknown as mongoose.Types.ObjectId)) {
+      res.status(403).json({ error: "Trip does not belong to the user" });
+      return;
     }
+
     const itinerary = await Itinerary.findById(tripId);
     if (!itinerary) {
-      res.status(404).json({ error: "Itinerario no encontrado" });
-      return
+      res.status(404).json({ error: "Itinerary not found" });
+      return;
     }
 
     let activityRemoved = false;
 
     itinerary.days.forEach(day => {
       const initialLength = day.activities.length;
-      day.activities = day.activities.filter(activity => activity.toString() !== activityId);
-      
+      day.activities = day.activities.filter(activity => !activity.equals(activityId));
+
       if (day.activities.length !== initialLength) {
-        activityRemoved = true;
-      }
-      if (day.lunch?.toString() === activityId) {
-        itinerary.updateOne({ $unset: { "days.$.lunch": "" } }).exec();
-        activityRemoved = true;
-      }
-      if (day.dinner?.toString() === activityId) {
-        itinerary.updateOne({ $unset: { "days.$.dinner": "" } }).exec();
         activityRemoved = true;
       }
     });
 
     if (!activityRemoved) {
-    res.status(404).json({ error: "Actividad no encontrada en el trip" });
-    return
+      res.status(404).json({ error: "Activity not found in the trip" });
+      return;
     }
 
-
     await itinerary.save();
+    res.status(200).json(itinerary);
+    return;
 
-    console.log(`✅ Actividad ${activityId} eliminada del trip ${tripId}`);
-     res.status(200).json(itinerary);
-     return
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error("Error eliminando la actividad:", error);
-     res.status(500).json({ error: "Error eliminando la actividad del trip" });
-     return
+    res.status(500).json({ error: "Error removing the activity from the trip" });
+    return;
   }
-}
+};
 
 export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
     if (!userId) {
-      res.status(401).json({ error: "No autorizado" });
+      res.status(401).json({ error: "Unauthorized" });
       return;
     }
 
-    const { tripId } = req.params;
+    const { itineraryId } = req.params;
     const { activityId, fromDayDate, toDayDate } = req.body;
 
-    if (!tripId || !activityId || !fromDayDate || !toDayDate || 
-        !mongoose.Types.ObjectId.isValid(tripId) || !mongoose.Types.ObjectId.isValid(activityId)) {
-      res.status(400).json({ error: "Datos inválidos. Revisar tripId, activityId y fechas" });
+    if (!itineraryId || !activityId || !fromDayDate || !toDayDate || 
+        !mongoose.Types.ObjectId.isValid(itineraryId) || !mongoose.Types.ObjectId.isValid(activityId)) {
+      res.status(400).json({ error: "Invalid data. Check itineraryId, activityId, and dates" });
       return;
     }
 
-    console.log(`Intentando mover actividad ${activityId} de ${fromDayDate} a ${toDayDate}`);
-
-    // Verificar que el usuario tiene este trip en sus savedTrips
     const user = await User.findById(userId);
-    if (!user || !user.savedTrips.includes(new mongoose.Types.ObjectId(tripId))) {
-      res.status(403).json({ error: "El trip no pertenece al usuario" });
+    if (!user || !user.savedTrips.includes(itineraryId as unknown as mongoose.Types.ObjectId)) {
+      res.status(403).json({ error: "Trip does not belong to the user" });
       return;
     }
 
-    // Buscar el itinerario del usuario
-    const itinerary = await Itinerary.findById(tripId);
+    const itinerary = await Itinerary.findById(itineraryId);
     if (!itinerary) {
-      res.status(404).json({ error: "Itinerario no encontrado" });
+      res.status(404).json({ error: "Itinerary not found" });
       return;
     }
+
     const startDate = new Date(itinerary.startDate);
-    const fromDayIndex = new Date(fromDayDate).getDate() - startDate.getDate();
-    const toDayIndex = new Date(toDayDate).getDate() - startDate.getDate();
+    const fromDayIndex = Math.round((new Date(fromDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1); // Calcula el número de día dentro del itinerario basado en la diferencia de días desde la fecha de inicio.
+    // Se suma 1 para que el primer día del itinerario sea 1 en lugar de 0.
+    
+    const toDayIndex = Math.round((new Date(toDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1);
 
     if (fromDayIndex < 0 || fromDayIndex >= itinerary.days.length || 
         toDayIndex < 0 || toDayIndex >= itinerary.days.length) {
-      res.status(400).json({ error: "Las fechas no coinciden con los días del itinerario" });
+      res.status(400).json({ error: "Dates do not match itinerary days" });
       return;
     }
 
     const fromDay = itinerary.days[fromDayIndex];
     const toDay = itinerary.days[toDayIndex];
 
-    // Remover la actividad del día original
-    const activityIndex = fromDay.activities.findIndex(act => act.toString() === activityId);
+    const activityIndex = fromDay.activities.findIndex(act => act.equals(activityId)); // moongose tiene el método EQUALS que permite comparar objects id 
     if (activityIndex === -1) {
-      res.status(404).json({ error: "Actividad no encontrada en el día de origen" });
+      res.status(404).json({ error: "Activity not found in the original day" });
       return;
     }
 
     const [movedActivity] = fromDay.activities.splice(activityIndex, 1);
     toDay.activities.push(movedActivity);
 
-    // Guardamos los cambios en la BD
     await itinerary.save();
     res.status(200).json(itinerary);
     return;
-  } catch (error) {
-    console.error("❌ Error moviendo la actividad:", error);
-    res.status(500).json({ error: "Error al mover la actividad" });
+
+  } catch {
+    res.status(500).json({ error: "Internal server error" });
     return;
   }
-}
+};

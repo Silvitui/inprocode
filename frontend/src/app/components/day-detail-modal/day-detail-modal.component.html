@@ -13,7 +13,7 @@
         <li class="flex justify-between items-center bg-gray-100 p-2 rounded-md shadow-sm">
           <span>{{ event.title }}</span>
           <div class="flex space-x-2">
-            <button class="btn btn-xs btn-error text-white" (click)="handleDeleteActivity(event)">🗑️</button>
+            <button class="btn btn-xs btn-error text-white" (click)="confirmDelete(event)">🗑️</button>
           </div>
         </li>
       }
@@ -24,3 +24,19 @@
     </div>
   </div>
 </dialog>
+
+<!--  MODAL DE CONFIRMACIÓN DE ELIMINACIÓN -->
+@if (confirmDeleteModal()) {
+  <dialog class="modal modal-bottom sm:modal-middle" [open]="confirmDeleteModal()">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg text-red-600">⚠️ Confirm Deletion</h3>
+      <p>Are you sure you want to delete "<strong>{{ activityToDelete()?.title }}</strong>"?</p>
+      <p class="text-sm text-gray-500">This action cannot be undone.</p>
+
+      <div class="modal-action justify-center mt-4">
+        <button class="btn btn-error" (click)="handleDeleteActivity()">Yes, Delete</button>
+        <button class="btn btn-secondary" (click)="confirmDeleteModal.set(false)">Cancel</button>
+      </div>
+    </div>
+  </dialog>
+}

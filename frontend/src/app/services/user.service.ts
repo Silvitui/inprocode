@@ -10,7 +10,6 @@ export class UserService {
   apiUrl = 'http://localhost:3000/api/user';
   http = inject(HttpClient);
 
-  /** 🔹 Guardar un viaje del usuario */
   saveUserTrip(city: string, days: Day[], startDate: Date): Observable<Itinerary> {
     return this.http.post<Itinerary>(
       `${this.apiUrl}/saveTrip`,
@@ -19,7 +18,6 @@ export class UserService {
     );
   }
 
-  /** 🔹 Obtener los viajes guardados del usuario */
   getUserSavedTrips(): Observable<Itinerary[]> {
     return this.http.get<Itinerary[]>(`${this.apiUrl}/savedTrips`, { withCredentials: true });
   }

@@ -1,3 +1,4 @@
+import { UserService } from './../../../services/user.service';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItineraryService } from '../../../services/itinerary.service';
@@ -10,11 +11,12 @@ import { CarbonFootprintComponent } from '../../carbon-footprint/carbon-footprin
 @Component({
   selector: 'app-map-container',
   templateUrl: `./map-container.component.html`,
-  imports: [MapViewComponent, CommonModule], 
+  imports: [MapViewComponent, CommonModule],
   standalone: true,
 })
 export class MapContainerComponent implements OnInit {
   itineraryService = inject(ItineraryService);
+  userService = inject(UserService);
   carbonFootprintService = inject(CarbonFootprintService);
 
   itinerary = signal<Itinerary | null>(null);
@@ -24,19 +26,25 @@ export class MapContainerComponent implements OnInit {
 
   selectedDay = signal<number>(1);
   selectedTransport = signal<string>('car');
+  selectedCategories = signal<string[]>([]);
 
   ngOnInit(): void {
     this.loadItinerary();
   }
 
   loadItinerary(): void {
-    this.itineraryService.getItinerary('barcelona').subscribe({
-      next: (response) => {
-        this.itinerary.set(response);
-        this.computeMapData();
+    this.userService.getUserSavedTrips().subscribe(
+      (trips) => {
+        if (trips.length > 0) {
+          const savedItinerary = trips[0];
+          this.itinerary.set(savedItinerary);
+          this.computeMapData();
+        } else {
+          this.itinerary.set(null);
+        }
       },
-      error: (error) => console.error('Error loading itinerary:', error),
-    });
+      (error) => console.error('Error getting user saved trips:', error)
+    );
   }
 
   computeMapData(): void {
@@ -45,7 +53,10 @@ export class MapContainerComponent implements OnInit {
     const dayData = this.itinerary()?.days.find(day => day.day === this.selectedDay());
     if (!dayData) return;
 
-    const places: Place[] = [...dayData.activities, dayData.lunch, dayData.dinner].filter(Boolean) as Place[];
+    let places: Place[] = [...dayData.activities].filter(Boolean) as Place[];
+    if (this.selectedCategories().length > 0) {
+      places = places.filter(place => this.selectedCategories().includes(place.category));
+    }
 
     this.markers.set(
       places.map(place => ({
@@ -97,4 +108,8 @@ export class MapContainerComponent implements OnInit {
     this.selectedDay.set(day);
     this.computeMapData();
   }
-}  
+  updateSelectedCategories(categories: string[]): void {
+    this.selectedCategories.set(categories);
+    this.computeMapData();
+  }
+}

@@ -4,6 +4,7 @@ import { CalendarEvent } from '../../interfaces/calendar';
 import { Itinerary } from '../../interfaces/itinerary';
 import { UserService } from '../../services/user.service';
 
+
 @Component({
   selector: 'app-day-detail-modal',
   standalone: true,
@@ -16,10 +17,12 @@ export class DayDetailModalComponent implements OnChanges {
 
   @Input() selectedDate: Date | null = null;
   @Input() events: CalendarEvent[] = [];
-  @Input() currentItinerary: Itinerary | null = null; // Guardar trip del usuario
+  @Input() currentItinerary: Itinerary | null = null; 
   @Output() updatedItinerary = new EventEmitter<{ action: string; activity: CalendarEvent }>();
 
   openModal = signal(false);
+  confirmDeleteModal = signal(false);
+  activityToDelete = signal<CalendarEvent | null>(null);
   dayDescription = signal('');
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -44,11 +47,39 @@ export class DayDetailModalComponent implements OnChanges {
   close(): void {
     this.openModal.set(false);
   }
+  confirmDelete(activity: CalendarEvent): void {
+    this.activityToDelete.set(activity);
+    this.confirmDeleteModal.set(true);
+  }
 
-  handleDeleteActivity(activity: CalendarEvent): void {
-    this.updatedItinerary.emit({
-      action: 'delete',
-      activity
+  handleDeleteActivity(): void {
+    const activity = this.activityToDelete();
+    if (!this.currentItinerary || !activity) {
+      console.error("🚨 No hay un itinerario o actividad seleccionada.");
+      return;
+    }
+
+    const itineraryId = this.currentItinerary?._id;
+    const activityId = activity._id;
+
+    if (!itineraryId || !activityId) {
+      console.error("🚨 Itinerary ID or Activity ID is missing.");
+      return;
+    }
+
+    console.log(`🗑️ Eliminando actividad ${activityId} del itinerario ${itineraryId}`);
+
+    this.userService.deleteUserTripActivity(itineraryId, activityId).subscribe({
+      next: (updatedItinerary) => {
+        this.currentItinerary = updatedItinerary;
+        this.events = this.events.filter(event => event._id !== activityId);
+        this.updatedItinerary.emit({ action: 'delete', activity });
+        this.confirmDeleteModal.set(false);
+      },
+      error: (error) => {
+        console.error(" Error eliminando actividad:", error);
+        this.confirmDeleteModal.set(false);
+      }
     });
   }
 

@@ -27,7 +27,7 @@ const calculateEmissions = (distance: number) => {
 export const getAllItineraries = async (_req: Request, res: Response) => {
   try {
     const itineraries = await Itinerary.find()
-      .populate("days.activities days.lunch days.dinner");
+      .populate("days.activities");
     res.status(200).json(itineraries);
     return;
   } catch (error) {
@@ -43,7 +43,7 @@ export const getItineraryByCity = async (req: Request, res: Response): Promise<v
     const { city } = req.params;
     const itinerary = await Itinerary.findOne({
       city: { $regex: new RegExp(`^${city}$`, "i") } // ^ y $ indican que debe coincidir desde el inicio hasta el final de la cadena, debe ser una coincidencia exacta. Y "i" significa "case-insensitive"
-    }).populate("days.activities days.lunch days.dinner");
+    }).populate("days.activities");
     if (!itinerary) {
       res.status(404).json({ error: "Itinerario no encontrado" });
       return;
@@ -57,9 +57,7 @@ export const getItineraryByCity = async (req: Request, res: Response): Promise<v
   }
 };
 
-/**
- * Obtiene los lugares de un día específico de un itinerario para poder enseñarlos en el modal 
- */
+
 export const getPlacesByDay = async (req: Request, res: Response) => {
   try {
     const { city, day } = req.params;
@@ -74,7 +72,7 @@ export const getPlacesByDay = async (req: Request, res: Response) => {
       res.status(404).json({ error: "Día no encontrado en el itinerario" });
       return;
     }
-    res.status(200).json({ places: dayData.activities, lunch: dayData.lunch, dinner: dayData.dinner });
+    res.status(200).json({ places: dayData.activities });
     return;
   } catch (error) {
     console.error("Error en getPlacesByDay:", error);
@@ -83,9 +81,7 @@ export const getPlacesByDay = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Crea un itinerario general (o plantilla) con startDate.
- */
+
 export const createItinerary = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { city, days, startDate } = req.body;
@@ -98,15 +94,12 @@ export const createItinerary = async (req: AuthenticatedRequest, res: Response):
       res.status(400).json({ error: "Datos inválidos" });
       return;
     }
-    // Procesa cada día (calculando emisiones, etc.)
     const processedDays: ProcessedDay[] = days.map((day: Day) => ({
       ...day,
       transportation: calculateEmissions(day.distance)
     }));
-    // Crear el itinerario con startDate (convertido a Date)
     const newItinerary = await Itinerary.create({ city, days: processedDays, startDate: new Date(startDate) });
     console.log("Se ha creado el itinerario nuevo en la base de datos:", newItinerary);
-    // Se asocia el itinerario al usuario agregándolo a savedTrips
     const update = await User.findByIdAndUpdate(userId, { $push: { savedTrips: newItinerary._id } });
     if (!update) {
       res.status(404).json({ error: "Usuario no encontrado" });

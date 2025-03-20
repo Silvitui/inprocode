@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
@@ -18,16 +18,20 @@ export class MapViewComponent implements AfterViewInit, OnChanges {
   @Input() route: MapRoute | null = null;
   @Input() selectedDay: number = 1;
   @Input() selectedTransport: string = 'car';
-  @Input() carbonEmissions: { [key: string]: number } = {}; 
+  @Input() carbonEmissions: { [key: string]: number } = {};
   @Output() transportChange = new EventEmitter<string>();
   @Output() dayChange = new EventEmitter<number>();
+
+  @Output() categoryFilterChange = new EventEmitter<string[]>();
 
   @ViewChild('mapContainer') mapContainer: any;
   map!: mapboxgl.Map;
   currentMarkers: mapboxgl.Marker[] = [];
+  availableCategories = ['Park', 'Restaurant', 'Museum', 'Historical', 'Shopping'];
+  selectedCategories = signal<string[]>([]);
 
   ngAfterViewInit(): void {
-   this.initializeMap()
+    this.initializeMap();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -51,7 +55,6 @@ export class MapViewComponent implements AfterViewInit, OnChanges {
   }
 
   updateMap(): void {
-    //  Eliminamos marcadores anteriores
     this.currentMarkers.forEach(marker => marker.remove());
     this.currentMarkers = [];
     this.markers.forEach(markerData => {
@@ -62,7 +65,6 @@ export class MapViewComponent implements AfterViewInit, OnChanges {
       this.currentMarkers.push(marker);
     });
 
-    //  Dibujamos la ruta cuando hayan al menos dos puntos
     if (this.route && this.route.coordinates.length >= 2) {
       if (this.map.getSource('route')) {
         this.map.removeLayer('route');
@@ -89,10 +91,22 @@ export class MapViewComponent implements AfterViewInit, OnChanges {
         paint: { 'line-color': '#1DB954', 'line-width': 4 }
       });
 
-      //  Ajustamos la vista del mapa a la ruta
       const bounds = new mapboxgl.LngLatBounds();
       this.route.coordinates.forEach(coord => bounds.extend(coord));
       this.map.fitBounds(bounds, { padding: 50, maxZoom: 15 });
     }
   }
+  toggleCategory(category: string): void {
+    let updatedCategories = [...this.selectedCategories()];
+    
+    if (updatedCategories.includes(category)) {
+      updatedCategories = updatedCategories.filter(cat => cat !== category);
+    } else {
+      updatedCategories.push(category);
+    }
+  
+    this.selectedCategories.set(updatedCategories);
+    this.categoryFilterChange.emit(updatedCategories); 
+  }
+  
 }

@@ -1,14 +1,11 @@
 <header class="p-2 sm:p-6 flex justify-between items-center bg-transparent ">
   <div class="w-20"></div>
-
-  <!-- Navegación principal -->
   <nav class="hidden md:flex space-x-4 lg:space-x-8">
     <a routerLink="/welcome" class="text-white hover:text-green-500 text-sm md:text-base">About</a>
     <a routerLink="/map" class="text-white hover:text-green-500 text-sm md:text-base">Destinations</a>
     <a routerLink="/calendar" class="text-white hover:text-green-500 text-sm md:text-base">Calendar</a>
   </nav>
 
-  <!-- Botones de autenticación -->
   @if (authService.isAuthenticated()) { 
     <div class="hidden md:flex space-x-2 lg:space-x-4 me-2">
       <button (click)="logout()" class="btn btn-outline btn-xs md:btn-sm text-green-500 border-green-300 hover:bg-green-400 hover:text-white">
@@ -26,7 +23,7 @@
     </div>
   }
 
-  <!-- Menú móvil -->
+
   <button (click)="toggleMenu()" class="md:hidden btn btn-outline text-green-500 border-green-500 me-3" aria-label="Toggle navigation menu">
     @if (!isMenuOpen()) {
       <span>☰</span>
@@ -36,7 +33,6 @@
   </button>
 </header>
 
-<!-- Menú desplegable para móviles -->
 @if (isMenuOpen()) {
   <div class="relative w-full bg-white border-t border-gray-200 py-4 flex flex-col items-center md:hidden transition-all duration-300">
     <a routerLink="/welcome" class="py-2 hover:text-green-500 text-sm">About</a>

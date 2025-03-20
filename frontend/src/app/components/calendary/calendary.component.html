@@ -10,7 +10,7 @@
   </div>
 
   @if (tripModalOpen()) {
-    <app-trip-modal (saveTrip)="savedTrips()" (closeModal)="tripModalOpen.set(false)"></app-trip-modal>
+    <app-trip-modal (saveTrip)="onSaveTrip($event)" (closeModal)="tripModalOpen.set(false)"></app-trip-modal>
   }
 
   @if (dayDetailModalOpen() && selectedDayEvents()) {
@@ -23,3 +23,4 @@
     </app-day-detail-modal>
   }
 </div>
+

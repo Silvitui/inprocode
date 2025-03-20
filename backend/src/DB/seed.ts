@@ -256,9 +256,8 @@ export const seedDB = async () => {
           getPlaceId('Parc del Guinardó'),
           getPlaceId('Bunkers del Carmel'),
           getPlaceId('Parc Güell'),
+          getPlaceId('Quinoa Bar Vegetarià'),
         ],
-        lunch: getPlaceId('Quinoa Bar Vegetarià'),
-        dinner: null,
         distance: distancesByDay[1],
         transportation: calculateEmissions(distancesByDay[1])
       },
@@ -269,9 +268,8 @@ export const seedDB = async () => {
           getPlaceId('Montjuïc'),
           getPlaceId('Castillo de Montjuïc'),
           getPlaceId('Jardines de Mossèn Costa i Llobera'),
+          getPlaceId('Terraza Martínez'),
         ],
-        lunch: null,
-        dinner: getPlaceId('Terraza Martínez'),
         distance: distancesByDay[2],
         transportation: calculateEmissions(distancesByDay[2])
       },
@@ -281,10 +279,10 @@ export const seedDB = async () => {
         activities: [
           getPlaceId('Parc de la Ciutadella'),
           getPlaceId('Taller de Artesanía Sostenible en El Born'),
-          getPlaceId('Barcelona Slow Fashion')
-        ],
-        lunch: getPlaceId('Wynwood Café'),
-        dinner: getPlaceId('Alive Restaurant'),
+          getPlaceId('Barcelona Slow Fashion'),
+          getPlaceId('Wynwood Café'),
+          getPlaceId('Alive Restaurant'),
+        ], 
         distance: distancesByDay[3],
         transportation: calculateEmissions(distancesByDay[3])
       },
@@ -295,10 +293,10 @@ export const seedDB = async () => {
           getPlaceId('Barri Gòtic'),
           getPlaceId('Museu de la Xocolata'),
           getPlaceId('Museu Picasso'),
-          getPlaceId('Mercat de Santa Caterina')
+          getPlaceId('Mercat de Santa Caterina'),
+          getPlaceId('Hummus Barcelona'),
+          getPlaceId('Casa Bonay – Libertine'),
         ],
-        lunch: getPlaceId('Hummus Barcelona'),
-        dinner: getPlaceId('Casa Bonay – Libertine'),
         distance: distancesByDay[4],
         transportation: calculateEmissions(distancesByDay[4])
       },
@@ -308,10 +306,10 @@ export const seedDB = async () => {
         activities: [
           getPlaceId('Platja de la Barceloneta'),
           getPlaceId('Passeig Marítim'),
-          getPlaceId('Port Olímpic')
+          getPlaceId('Port Olímpic'),
+          getPlaceId('Blueproject Foundation Café'),
+          getPlaceId('Rasoterra'),
         ],
-        lunch: getPlaceId('Blueproject Foundation Café'),
-        dinner: getPlaceId('Rasoterra'),
         distance: distancesByDay[5],
         transportation: calculateEmissions(distancesByDay[5])
       }

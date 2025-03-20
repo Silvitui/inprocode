@@ -8,8 +8,6 @@ const ItinerarySchema = new mongoose.Schema({
       day: { type: Number, required: true },
       title: { type: String },
       activities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Place" }], 
-      lunch: { type: mongoose.Schema.Types.ObjectId, ref: "Place", default: null }, 
-      dinner: { type: mongoose.Schema.Types.ObjectId, ref: "Place", default: null },
       distance: { type: Number },
       transportation: {
         type: Map,

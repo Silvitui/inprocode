@@ -1,15 +1,15 @@
 {
-    "version": 2,
-    "builds": [
+    "redirects": [
       {
-        "src": "dist/frontend/**/*",
-        "use": "@vercel/static"
+        "source": "/old-path",
+        "destination": "/new-path",
+        "permanent": true
       }
     ],
-    "routes": [
+    "rewrites": [
       {
-        "src": "/(.*)",
-        "dest": "/index.html"
+        "source": "/**",
+        "destination": "/index.html"
       }
     ]
   }

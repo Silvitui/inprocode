@@ -24,7 +24,7 @@ This project is an Angular-based web application that integrates multiple plugin
 <img src="frontend/public/assets/images/captuu2.png"  width="500">
 
 
-<img src="frontend/public/assets/images/captuu3.png"  width="500">
+<img src="frontend/public/assets/images/captu3.png"  width="500">
 
 ### ✅ Level 2
 - **Advanced Map Filtering**:

@@ -7,7 +7,7 @@ import { Day, Itinerary } from '../interfaces/itinerary';
   providedIn: 'root'
 })
 export class ItineraryService {
-  apiUrl = 'http://localhost:3000/api/itineraries';
+  apiUrl = 'https://planitgoeco-backend.onrender.com/api/itineraries';
   http = inject(HttpClient);
 
 

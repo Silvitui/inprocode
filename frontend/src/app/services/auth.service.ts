@@ -9,7 +9,7 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  apiUrl = 'http://localhost:3000/api/auth';
+  apiUrl = 'https://planitgoeco-backend.onrender.com/api/auth';
   http = inject(HttpClient);
   router = inject(Router);
   isAuthenticated = signal(false);

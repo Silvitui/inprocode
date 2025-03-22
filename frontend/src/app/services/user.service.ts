@@ -7,7 +7,7 @@ import { Day, Itinerary } from '../interfaces/itinerary';
   providedIn: 'root'
 })
 export class UserService {
-  apiUrl = 'http://localhost:3000/api/user';
+  apiUrl = 'https://planitgoeco-backend.onrender.com/api/user';
   http = inject(HttpClient);
 
   saveUserTrip(city: string, days: Day[], startDate: Date): Observable<Itinerary> {

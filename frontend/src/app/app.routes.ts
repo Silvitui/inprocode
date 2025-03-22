@@ -2,15 +2,24 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { LayoutComponent } from './layout/layout/layout.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { SimpleLayoutComponent } from './layout/simple-layout/simple-layout.component'; // 👈 nuevo layout
 
 export const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-  { path: 'login', loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) },
-  { path: 'register', loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent) },
-  { path: 'about', loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent) },
 
-  // Ruta con fondo woods
-  { 
+  // Rutas que usan fondo blur-up (login, register, about)
+  {
+    path: '',
+    component: SimpleLayoutComponent,
+    children: [
+      { path: 'login', loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) },
+      { path: 'register', loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent) },
+      { path: 'about', loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent) },
+    ]
+  },
+
+  // Ruta con fondo woods (welcome)
+  {
     path: '',
     component: LayoutComponent,
     children: [
@@ -18,7 +27,7 @@ export const routes: Routes = [
     ]
   },
 
-// Rutas con fondo bcn 
+  // Rutas con fondo BCN
   {
     path: '',
     component: MainLayoutComponent,

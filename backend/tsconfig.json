@@ -20,8 +20,7 @@
 
     // 🚀 Configuración para Express y Node.js
     "forceConsistentCasingInFileNames": true, // Evita errores por diferencias en mayúsculas/minúsculas en rutas de archivos
-    "allowSyntheticDefaultImports": true, // Permite importar módulos sin `default` export
-    "types": ["node", "express"]         // Incluye las definiciones de tipos de Node.js y Express
+    "allowSyntheticDefaultImports": true // Permite importar módulos sin `default` export
   },
   "exclude": ["node_modules", "build"],  // Excluye estas carpetas del análisis de TypeScript
 }

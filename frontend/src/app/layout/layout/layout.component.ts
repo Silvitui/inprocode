@@ -11,5 +11,6 @@ import { NgOptimizedImage } from '@angular/common';
   styleUrl: './layout.component.scss'
 })
 export class LayoutComponent {
+  imageLoaded = false;
 
 }

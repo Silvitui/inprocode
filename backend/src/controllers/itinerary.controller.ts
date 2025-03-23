@@ -121,7 +121,10 @@ export const createItinerary = async (req: AuthenticatedRequest, res: Response):
 export const getEmissionsByTransport = async (req: Request, res: Response) => {
   try {
     const { city, day, transport } = req.params;
-    const itinerary = await Itinerary.findOne({ city: city.toLowerCase() });
+    const itinerary = await Itinerary.findOne({
+      city: { $regex: new RegExp(`^${city}$`, "i") }
+    });
+    
     if (!itinerary) {
       res.status(404).json({ error: "Itinerario no encontrado" });
       return;

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CarbonFootprintService {
-  API_URL = 'https://planitgoeco-backend.onrender.com/itineraries'; 
+  API_URL = 'https://planitgoeco-backend.onrender.com/api/itineraries'; 
  http = inject(HttpClient);
 
   getEmissions(city: string, day: number, transport: string): Observable<{ transport: string; carbonEmission: number }> {

@@ -76,8 +76,8 @@ export const loginUser = async (req: Request, res: Response) => {
 
         res.cookie("authToken", token, {
             httpOnly: true,  //  Protege la cookie de javascript
-            secure: process.env.NODE_ENV === "production", //  Solo en HTTPS en producción
-            sameSite: "strict", // Previene ataques CSRF
+            secure: true, //  Solo en HTTPS en producción
+            sameSite: "none", // Previene ataques CSRF
             maxAge: 60 * 60 * 1000, // 1 hora de autorización 
         });
 

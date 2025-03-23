@@ -1,7 +1,5 @@
 export const options = {
   origin: [
-    "http://localhost:4200",
-    "https://planitgoeco-frontend.vercel.app",
     "https://silvitui.github.io",  // Asegúrate de agregar el dominio de tu frontend
   ],
   credentials: true,  // Permitir el envío de cookies

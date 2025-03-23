@@ -1,12 +1,11 @@
 export const options = {
   origin: [
-    "http://localhost:4200",
-    "https://planitgoeco-frontend.vercel.app", // esta es un ejemplo, lo ajustas luego con tu dominio real
-    "planitgoeco-frontend-77o66f3xl-silvias-projects-88ff0bc2.vercel.app"
+    "https://planitgoeco-frontend.vercel.app",
+   
   ],
-  credentials: true, // permite enviar cookies en la solicitud 
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // métodos permitidos
-  allowedHeaders: ["Content-Type", "Authorization"], // headers permitidos
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 

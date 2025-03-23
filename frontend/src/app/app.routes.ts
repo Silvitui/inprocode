@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
-import { LayoutComponent } from './layout/layout/layout.component';
-import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
-import { SimpleLayoutComponent } from './layout/simple-layout/simple-layout.component'; // 👈 nuevo layout
+import { SimpleLayoutComponent } from './components/layout/simple-layout/simple-layout.component';
+import { LayoutComponent } from './components/layout/layout/layout.component';
+import { MainLayoutComponent } from './components/layout/main-layout/main-layout.component';
+
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },

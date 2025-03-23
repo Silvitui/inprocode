@@ -98,7 +98,7 @@ export const createItinerary = async (req: AuthenticatedRequest, res: Response):
       ...day,
       transportation: calculateEmissions(day.distance)
     }));
-    const newItinerary = await Itinerary.create({ city, days: processedDays, startDate: new Date(startDate) });
+    const newItinerary = await Itinerary.create({ city:city.toLowerCase(), days: processedDays, startDate: new Date(startDate) });
     console.log("Se ha creado el itinerario nuevo en la base de datos:", newItinerary);
     const update = await User.findByIdAndUpdate(userId, { $push: { savedTrips: newItinerary._id } });
     if (!update) {
@@ -121,7 +121,7 @@ export const createItinerary = async (req: AuthenticatedRequest, res: Response):
 export const getEmissionsByTransport = async (req: Request, res: Response) => {
   try {
     const { city, day, transport } = req.params;
-    const itinerary = await Itinerary.findOne({ city: city });
+    const itinerary = await Itinerary.findOne({ city: city.toLowerCase() });
     if (!itinerary) {
       res.status(404).json({ error: "Itinerario no encontrado" });
       return;

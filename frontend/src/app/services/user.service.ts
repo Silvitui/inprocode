@@ -2,13 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Day, Itinerary } from '../interfaces/itinerary';
-import { environment } from '../../environments/environment'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  apiUrl = `${environment.apiUrl}/user`;  
+  apiUrl = 'https://planitgoeco-backend.onrender.com/api/user';
   http = inject(HttpClient);
 
   saveUserTrip(city: string, days: Day[], startDate: Date): Observable<Itinerary> {
@@ -31,6 +30,7 @@ export class UserService {
     );
   }
 
+
   deleteUserTripActivity(itineraryId: string, activityId: string): Observable<Itinerary> {
     return this.http.request<Itinerary>('delete', `${this.apiUrl}/savedTrips/${itineraryId}/activity/delete`, {
       body: { activityId },
@@ -38,3 +38,4 @@ export class UserService {
     });
   }
 }
+

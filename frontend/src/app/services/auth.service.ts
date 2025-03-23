@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import { AuthCredentials } from '../interfaces/authCredentials';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  apiUrl = `${environment.apiUrl}/auth`;  
+  apiUrl = 'https://planitgoeco-backend.onrender.com/api/auth';
   http = inject(HttpClient);
   router = inject(Router);
   isAuthenticated = signal(false);
   redirectUrl: string | null = null;
+
 
   checkAuthStatus(): void { 
     this.http.get<boolean>(`${this.apiUrl}/check-auth`, { withCredentials: true }).subscribe({
@@ -36,7 +36,7 @@ export class AuthService {
     );
   }
 
-  loginUser(credentials: Pick<AuthCredentials, 'email' | 'password'>): Observable<any> {
+  loginUser(credentials: Pick<AuthCredentials, 'email' | 'password'>): Observable<any> {// PICK se usa cuando necesitas seleccionar algunas propiedades (En este caso necesitamos solo email y password.)
     return this.http.post(`${this.apiUrl}/login`, credentials, { withCredentials: true }).pipe(
       tap(() => {
         this.isAuthenticated.set(true); 
@@ -46,21 +46,22 @@ export class AuthService {
         this.router.navigateByUrl(targetUrl);
       }),
       catchError(error => {
-        console.error('Error en el login:', error);
+        console.error(' Error en el login:', error);
         return throwError(() => error);
       })
     );
   }
+  
 
   logoutUser(): Observable<any> {
     return this.http.get(`${this.apiUrl}/logout`, { withCredentials: true }).pipe(
       tap(() => {
         this.isAuthenticated.set(false); 
-        console.log('Logout exitoso');
+        console.log(' Logout exitoso');
         this.router.navigate(['/welcome']); 
       }),
       catchError(error => {
-        console.error('Error en el logout:', error);
+        console.error(' Error en el logout:', error);
         return throwError(() => error);
       })
     );

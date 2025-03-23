@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
 import { Chart, ChartOptions, registerables } from 'chart.js';
 
-Chart.register(...registerables);
+Chart.register(...registerables); // cuando usamos chart.js trabajamos con el DOM usando viewchild...puedo usar libreria como: ng2-charts, pero no me funciona.
 
 @Component({
   selector: 'app-carbon-footprint',

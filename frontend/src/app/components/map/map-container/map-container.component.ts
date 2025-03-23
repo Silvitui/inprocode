@@ -63,7 +63,6 @@ export class MapContainerComponent implements OnInit {
       places = places.filter(place => this.selectedCategories().includes(place.category));
     }
   
-    // ✅ Solo agregamos marcadores de los lugares filtrados
     this.markers.set(
       places.map(place => ({
         coordinates: [place.coordinates.lng, place.coordinates.lat],
@@ -84,32 +83,33 @@ export class MapContainerComponent implements OnInit {
   
   loadCarbonEmissions(): void {
     if (!this.itinerary()) return;
+  
     const city = this.itinerary()?.city ?? '';
     const day = this.selectedDay();
     const transports = ['car', 'train', 'bus', 'bike', 'walking'];
     const emissionsData: { [key: string]: number } = {};
     let completedRequests = 0;
-
+  
     transports.forEach(transport => {
       this.carbonFootprintService.getEmissions(city, day, transport).subscribe({
         next: (response) => {
           emissionsData[transport] = response.carbonEmission;
           completedRequests++;
           if (completedRequests === transports.length) {
-            this.carbonEmissions.set(emissionsData);
+            this.carbonEmissions.set({ ...emissionsData }); //  Forzar  referencia
           }
         },
         error: (err) => {
           console.error(`Error al obtener emisiones para ${transport}:`, err);
           completedRequests++;
           if (completedRequests === transports.length) {
-            this.carbonEmissions.set(emissionsData);
+            this.carbonEmissions.set({ ...emissionsData }); 
           }
         }
       });
     });
   }
-
+  
   selectTransport(mode: string): void {
     this.selectedTransport.set(mode);
     this.loadCarbonEmissions();

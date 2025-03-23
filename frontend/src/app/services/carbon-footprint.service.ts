@@ -11,7 +11,7 @@ export class CarbonFootprintService {
 
   getEmissions(city: string, day: number, transport: string): Observable<{ transport: string; carbonEmission: number }> {
     return this.http.get<{ transport: string; carbonEmission: number }>(
-      `${this.API_URL}/${city}/${day}/emissions/${transport}`
+      `${this.API_URL}/${city.toLowerCase()}/${day}/emissions/${transport}`
     );
   }
 

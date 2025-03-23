@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-home',
   standalone: true,
   templateUrl: './welcome.component.html',
-  imports: [CommonModule, RouterModule,NgOptimizedImage],
+  imports: [CommonModule, RouterModule],
   styleUrls: ['./welcome.component.scss']
 })
 export class WelcomeComponent {

@@ -8,7 +8,7 @@ import { CarbonFootprintComponent } from '../../carbon-footprint/carbon-footprin
 
 @Component({
   selector: 'app-map-view',
-  imports: [CommonModule, TransportSelectorComponent, CarbonFootprintComponent],
+  imports: [CommonModule,  CarbonFootprintComponent],
   standalone: true,
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.scss']

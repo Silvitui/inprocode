@@ -1,7 +1,7 @@
 export const options = {
   origin: [
-    "https://planitgoeco-frontend.vercel.app",
-   
+    "http://localhost:4200",
+    "https://silvitui.github.io",
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],

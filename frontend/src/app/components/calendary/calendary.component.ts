@@ -33,8 +33,8 @@ export class CalendaryComponent implements OnInit {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     events: [],
-    editable: true, //  Habilitamos drag & drop de eventos
-    eventDrop: this.handleEventDrop.bind(this), // Capturamos el evento cuando se suelta en otro día
+    editable: true,
+    eventDrop: this.handleEventDrop.bind(this),
     eventClick: this.handleEventClick.bind(this),
   };
 
@@ -89,27 +89,25 @@ export class CalendaryComponent implements OnInit {
     setTimeout(() => this.toastMessage.set(null), 3000);
   }
 
-
   generateEventsFromItinerary(itinerary: Itinerary, startDate: Date): CalendarEvent[] {
     if (!itinerary || !itinerary.days || itinerary.days.length === 0) return [];
-  
+
     const baseDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-  
+
     return itinerary.days.flatMap((day, index) => {
       const currentDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + index);
       const formattedDate = `${currentDate.getFullYear()}-${('0' + (currentDate.getMonth() + 1)).slice(-2)}-${('0' + currentDate.getDate()).slice(-2)}`;
       const places: Place[] = this.extractPlaces(day.activities);
-  
+
       return places.map((place) => ({
-        _id: place._id,  //  Usa el ObjectId real
-        title: place.name || 'Unknown Place', 
+        _id: place._id,
+        title: place.name || 'Unknown Place',
         start: formattedDate,
         category: place.category || 'activity',
         itineraryId: itinerary._id!,
       }));
     });
   }
-  
 
   extractPlaces(places: (Place | string | null)[]): Place[] {
     return places.filter((place): place is Place => place !== null && typeof place === 'object' && 'name' in place);
@@ -137,49 +135,48 @@ export class CalendaryComponent implements OnInit {
 
   handleEventDrop(info: EventDropArg): void {
     const event = info.event;
-    const itineraryId = event.extendedProps['itineraryId']; 
-    const activityId = event.extendedProps['_id']; 
+    const itineraryId = event.extendedProps['itineraryId'];
+    const activityId = event.extendedProps['_id'];
     const toDayDate = event.start?.toISOString().split('T')[0];
     const fromDayDate = info.oldEvent.start?.toISOString().split('T')[0];
-  
+
     if (!itineraryId || !activityId || !fromDayDate || !toDayDate) {
       console.warn("🚨 Falta información del evento, no se puede mover.");
       return;
     }
-  
+
     this.userService.moveUserTripActivity(itineraryId, activityId, fromDayDate, toDayDate)
       .subscribe({
-        next: () => {
-          console.log("Actividad movida exitosamente en el backend.");
-          this.loadUserSavedTrips();
+        next: (updatedItinerary) => {
+          console.log("Actividad movida exitosamente:", updatedItinerary);
+          this.updateCalendarEvents(updatedItinerary);
+          this.showToast("✅ Activity moved!");
         },
         error: (error) => {
           console.error("Error al mover la actividad:", error);
-          info.revert(); 
+          info.revert();
+          this.showToast("❌ Failed to move activity.");
         }
       });
   }
-  
-  
+
   onSaveTrip({ startDate }: { startDate: string }): void {
     const currentTrip = this.currentItinerary();
     if (!currentTrip) {
       this.showToast("⚠️ No itinerary currently loaded");
       return;
     }
-  
+
     const newTripStartDate = new Date(startDate).toISOString().split('T')[0];
-    // Verifico si ya existe un viaje guardado con esta fecha
     const tripAlreadyExists = this.savedTrips().some(
       trip => new Date(trip.startDate).toISOString().split('T')[0] === newTripStartDate
     );
-  
+
     if (tripAlreadyExists) {
       this.showToast("⚠️ You already have a trip saved for this date.");
       return;
     }
-  
-    // Llamo al backend para guardar el nuevo viaje
+
     this.userService.saveUserTrip(
       currentTrip.city,
       currentTrip.days,
@@ -187,9 +184,7 @@ export class CalendaryComponent implements OnInit {
     ).subscribe({
       next: (newTrip) => {
         console.log("Nuevo viaje guardado:", newTrip);
-        // Actualizo la lista de viajes guardados
         this.savedTrips.update(trips => [...trips, newTrip]);
-        // El nuevo viaje se queda como itinerario actual
         this.currentItinerary.set(newTrip);
         const newTripEvents = this.generateEventsFromItinerary(newTrip, new Date(newTrip.startDate));
         this.events.update(events => [...events, ...newTripEvents]);
@@ -203,12 +198,10 @@ export class CalendaryComponent implements OnInit {
       }
     });
   }
-  
-  
+
   updateCalendarEvents(updatedTrip: Itinerary): void {
     const updatedEvents = this.generateEventsFromItinerary(updatedTrip, new Date(updatedTrip.startDate));
     this.events.set(updatedEvents);
     this.calendarOptions = { ...this.calendarOptions, events: this.events() };
   }
-  
 }

@@ -3,7 +3,7 @@
     "target": "ES6",                   // Soporta sintaxis moderna de JavaScript
     "module": "CommonJS",               // Usado en Node.js para importar módulos
     "rootDir": "./src",                 // Carpeta donde está el código TypeScript
-    "outDir": "./build",                // Carpeta donde se guardará el código compilado
+    "outDir": "node_modules/build",                // Carpeta donde se guardará el código compilado
     "strict": true,                      // Activa validaciones estrictas de TypeScript
 
 
@@ -22,5 +22,5 @@
     "forceConsistentCasingInFileNames": true, // Evita errores por diferencias en mayúsculas/minúsculas en rutas de archivos
     "allowSyntheticDefaultImports": true // Permite importar módulos sin `default` export
   },
-  "exclude": ["node_modules", "build"],  // Excluye estas carpetas del análisis de TypeScript
+  "exclude": ["node_modules", "node_modules/build"],  // Excluye estas carpetas del análisis de TypeScript
 }

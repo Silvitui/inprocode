@@ -168,14 +168,14 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     
     const toDayIndex = Math.round((new Date(toDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1);
 
-    if (fromDayIndex < 0 || fromDayIndex >= itinerary.days.length || 
-        toDayIndex < 0 || toDayIndex >= itinerary.days.length) {
-      res.status(400).json({ error: "Dates do not match itinerary days" });
-      return;
-    }
+    // if (fromDayIndex < 0 || fromDayIndex >= itinerary.days.length || 
+    //     toDayIndex < 0 || toDayIndex >= itinerary.days.length) {
+    //   res.status(400).json({ error: "Dates do not match itinerary days" });
+    //   return;
+    // }
 
-    const fromDay = itinerary.days[fromDayIndex - 1];
-    const toDay = itinerary.days[toDayIndex - 1];
+    const fromDay = itinerary.days[fromDayIndex];
+    const toDay = itinerary.days[toDayIndex];
 
     const activityIndex = fromDay.activities.findIndex(act => act.equals(activityId)); // moongose tiene el método EQUALS que permite comparar objects id 
     if (activityIndex === -1) {

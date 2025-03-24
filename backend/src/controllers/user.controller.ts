@@ -147,7 +147,8 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
 
     if (
       !itineraryId || !activityId || !fromDayDate || !toDayDate ||
-      !mongoose.Types.ObjectId.isValid(itineraryId) || !mongoose.Types.ObjectId.isValid(activityId)
+      !mongoose.Types.ObjectId.isValid(itineraryId) ||
+      !mongoose.Types.ObjectId.isValid(activityId)
     ) {
       res.status(400).json({ error: "Invalid data. Check itineraryId, activityId, and dates" });
       return;
@@ -166,12 +167,16 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     }
 
     const startDate = new Date(itinerary.startDate);
-    const fromDayIndex = Math.round(
-      (new Date(fromDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    const toDayIndex = Math.round(
-      (new Date(toDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    startDate.setHours(0, 0, 0, 0);
+
+    const fromDate = new Date(fromDayDate);
+    fromDate.setHours(0, 0, 0, 0);
+
+    const toDate = new Date(toDayDate);
+    toDate.setHours(0, 0, 0, 0);
+
+    const fromDayIndex = Math.floor((fromDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const toDayIndex = Math.floor((toDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
     if (
       fromDayIndex < 0 || fromDayIndex >= itinerary.days.length ||

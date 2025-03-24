@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -8,6 +8,6 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './simple-layout.component.scss'
 })
 export class SimpleLayoutComponent {
-  imageLoaded = false;
+  imageLoaded = signal(false)
 }
 

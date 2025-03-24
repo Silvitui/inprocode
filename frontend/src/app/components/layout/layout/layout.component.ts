@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
@@ -12,6 +12,6 @@ import { FooterComponent } from '../../shared/footer/footer.component';
   styleUrl: './layout.component.scss'
 })
 export class LayoutComponent {
- 
+  imageLoaded = signal(false);
 
 }

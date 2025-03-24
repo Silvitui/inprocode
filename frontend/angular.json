@@ -30,7 +30,8 @@
                 "input": "public/assets",
                 "output": "assets"
               },
-              "src/favicon.ico"
+              "src/favicon.ico",
+              "src/env.js"
             ],
             "styles": ["src/styles.scss"],
             "scripts": []

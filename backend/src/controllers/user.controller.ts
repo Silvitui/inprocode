@@ -144,8 +144,10 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     const { itineraryId } = req.params;
     const { activityId, fromDayDate, toDayDate } = req.body;
 
-    if (!itineraryId || !activityId || !fromDayDate || !toDayDate || 
-        !mongoose.Types.ObjectId.isValid(itineraryId) || !mongoose.Types.ObjectId.isValid(activityId)) {
+    if (
+      !itineraryId || !activityId || !fromDayDate || !toDayDate ||
+      !mongoose.Types.ObjectId.isValid(itineraryId) || !mongoose.Types.ObjectId.isValid(activityId)
+    ) {
       res.status(400).json({ error: "Invalid data. Check itineraryId, activityId, and dates" });
       return;
     }
@@ -163,13 +165,13 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     }
 
     const startDate = new Date(itinerary.startDate);
-    const fromDayIndex = Math.round((new Date(fromDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1); // Calcula el número de día dentro del itinerario basado en la diferencia de días desde la fecha de inicio.
-    // Se suma 1 para que el primer día del itinerario sea 1 en lugar de 0.
-    
-    const toDayIndex = Math.round((new Date(toDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1);
+    const fromDayIndex = Math.round((new Date(fromDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const toDayIndex = Math.round((new Date(toDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
-    if (fromDayIndex < 0 || fromDayIndex >= itinerary.days.length || 
-        toDayIndex < 0 || toDayIndex >= itinerary.days.length) {
+    if (
+      fromDayIndex < 0 || fromDayIndex >= itinerary.days.length ||
+      toDayIndex < 0 || toDayIndex >= itinerary.days.length
+    ) {
       res.status(400).json({ error: "Dates do not match itinerary days" });
       return;
     }
@@ -177,7 +179,10 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     const fromDay = itinerary.days[fromDayIndex];
     const toDay = itinerary.days[toDayIndex];
 
-    const activityIndex = fromDay.activities.findIndex(act => act.equals(activityId)); // moongose tiene el método EQUALS que permite comparar objects id 
+    const activityIndex = fromDay.activities.findIndex(act => {
+      return act.toString() === activityId;
+    });
+
     if (activityIndex === -1) {
       res.status(404).json({ error: "Activity not found in the original day" });
       return;
@@ -190,7 +195,8 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     res.status(200).json(itinerary);
     return;
 
-  } catch {
+  } catch (error) {
+    console.error("Error in moveUserTripActivity:", error);
     res.status(500).json({ error: "Internal server error" });
     return;
   }

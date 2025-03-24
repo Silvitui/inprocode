@@ -1,13 +1,13 @@
 <div class="relative flex flex-col min-h-screen  overflow-hidden">
     <img 
-      src="assets/calmingblur.jpg"
+      src="assets/assets/calmingblur.jpg"
       class="absolute inset-0 w-full h-full object-cover blur-xl scale-110 transition-opacity duration-700 -z-10"
       [class.opacity-100]="!imageLoaded"
       [class.opacity-0]="imageLoaded"
     />
 
     <img
-      src="assets/calming-wood-optimo.webp"
+      src="assets/assets/calming-wood-optimo.webp"
       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 -z-10"
       (load)="imageLoaded = true"
       [class.opacity-0]="!imageLoaded"

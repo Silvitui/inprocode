@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -11,17 +11,20 @@ export class TripModalComponent {
   @Output() saveTrip = new EventEmitter<{ startDate: string, daysCount: number }>();
   @Output() closeModal = new EventEmitter<void>();
 
-  openModal = true;
-  startDate!: string;
-  daysCount = 5;
+  openModal = signal(true);
+  startDate = signal('');
+  daysCount = signal(5);
 
   close() {
-    this.openModal = false;
+    this.openModal.set(false);
     this.closeModal.emit();
   }
 
   save() {
-    this.openModal = false;
-    this.saveTrip.emit({ startDate: this.startDate, daysCount: this.daysCount });
+    this.openModal.set(false);
+    this.saveTrip.emit({
+      startDate: this.startDate(),
+      daysCount: this.daysCount()
+    });
   }
 }

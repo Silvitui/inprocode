@@ -1,26 +1,31 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CalendarOptions, EventClickArg, EventDropArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { UserService } from '../../services/user.service';
-import { ItineraryService } from '../../services/itinerary.service';
-import { Itinerary, Place } from '../../interfaces/itinerary';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
 import { TripModalComponent } from '../trip-modal/trip-modal.component';
 import { DayDetailModalComponent } from '../day-detail-modal/day-detail-modal.component';
+import { UserService } from '../../services/user.service';
+import { ItineraryService } from '../../services/itinerary.service';
+import { Itinerary, Place } from '../../interfaces/itinerary';
 import { CalendarEvent } from '../../interfaces/calendar';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [FullCalendarModule, CommonModule, TripModalComponent, DayDetailModalComponent],
   templateUrl: './calendary.component.html',
-  styleUrls: ['./calendary.component.scss'],
+  imports: [
+    CommonModule,
+    FullCalendarModule,
+    TripModalComponent,
+    DayDetailModalComponent
+  ],
 })
 export class CalendaryComponent implements OnInit {
   userService = inject(UserService);
   itineraryService = inject(ItineraryService);
+
   savedTrips = signal<Itinerary[]>([]);
   currentItinerary = signal<Itinerary | null>(null);
   events = signal<CalendarEvent[]>([]);
@@ -32,26 +37,37 @@ export class CalendaryComponent implements OnInit {
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
-    events: [],
     editable: true,
     eventDrop: this.handleEventDrop.bind(this),
     eventClick: this.handleEventClick.bind(this),
+    events: this.events()
   };
 
   ngOnInit(): void {
     this.loadUserSavedTrips();
   }
 
+  openTripModal(): void {
+    this.tripModalOpen.set(true);
+  }
+
+  showToast(text: string): void {
+    this.toastMessage.set({ type: 'info', text });
+    setTimeout(() => this.toastMessage.set(null), 3000);
+  }
+
   loadUserSavedTrips(): void {
     this.userService.getUserSavedTrips().subscribe({
       next: (savedTrips) => {
-        const sortedTrips = savedTrips.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+        const sortedTrips = savedTrips.sort((a, b) =>
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+        );
         this.savedTrips.set(sortedTrips);
 
         if (sortedTrips.length > 0) {
           this.currentItinerary.set(sortedTrips[0]);
           let combinedEvents: CalendarEvent[] = [];
-          sortedTrips.forEach(trip => {
+          sortedTrips.forEach((trip) => {
             if (trip.days && trip.days.length > 0) {
               const tripEvents = this.generateEventsFromItinerary(trip, new Date(trip.startDate));
               combinedEvents = combinedEvents.concat(tripEvents);
@@ -63,7 +79,7 @@ export class CalendaryComponent implements OnInit {
           this.loadGeneralItinerary();
         }
       },
-      error: (error) => console.error('Error loading saved trips:', error)
+      error: (error) => console.error('Error loading saved trips:', error),
     });
   }
 
@@ -76,28 +92,18 @@ export class CalendaryComponent implements OnInit {
         this.events.set(eventsFromGeneral);
         this.calendarOptions = { ...this.calendarOptions, events: this.events() };
       },
-      error: (error) => console.error('Error loading general itinerary:', error)
+      error: (error) => console.error('Error loading general itinerary:', error),
     });
   }
 
-  openTripModal(): void {
-    this.tripModalOpen.set(true);
-  }
-
-  showToast(text: string): void {
-    this.toastMessage.set({ type: 'info', text });
-    setTimeout(() => this.toastMessage.set(null), 3000);
-  }
-
   generateEventsFromItinerary(itinerary: Itinerary, startDate: Date): CalendarEvent[] {
-    if (!itinerary || !itinerary.days || itinerary.days.length === 0) return [];
-
     const baseDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
 
     return itinerary.days.flatMap((day, index) => {
-      const currentDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + index);
-      const formattedDate = `${currentDate.getFullYear()}-${('0' + (currentDate.getMonth() + 1)).slice(-2)}-${('0' + currentDate.getDate()).slice(-2)}`;
-      const places: Place[] = this.extractPlaces(day.activities);
+      const currentDate = new Date(baseDate);
+      currentDate.setDate(baseDate.getDate() + index);
+      const formattedDate = currentDate.toISOString().split('T')[0];
+      const places = this.extractPlaces(day.activities);
 
       return places.map((place) => ({
         _id: place._id,
@@ -118,16 +124,14 @@ export class CalendaryComponent implements OnInit {
     if (!clickedDate) return;
 
     const localClickedDate = new Date(clickedDate.getFullYear(), clickedDate.getMonth(), clickedDate.getDate());
-    const clickedDateStr = `${localClickedDate.getFullYear()}-${('0' + (localClickedDate.getMonth() + 1)).slice(-2)}-${('0' + localClickedDate.getDate()).slice(-2)}`;
+    const clickedDateStr = localClickedDate.toISOString().split('T')[0];
 
     const eventsForDay = this.events().filter(({ start }) => start === clickedDateStr);
     if (!eventsForDay.length) return;
 
     const itineraryId = eventsForDay[0].itineraryId;
-    const matchingTrip = this.savedTrips().find(trip => trip._id === itineraryId);
-    if (matchingTrip) {
-      this.currentItinerary.set(matchingTrip);
-    }
+    const matchingTrip = this.savedTrips().find((trip) => trip._id === itineraryId);
+    if (matchingTrip) this.currentItinerary.set(matchingTrip);
 
     this.selectedDayEvents.set({ date: clickedDate, events: eventsForDay });
     this.dayDetailModalOpen.set(true);
@@ -141,61 +145,52 @@ export class CalendaryComponent implements OnInit {
     const fromDayDate = info.oldEvent.start?.toISOString().split('T')[0];
 
     if (!itineraryId || !activityId || !fromDayDate || !toDayDate) {
-      console.warn("🚨 Falta información del evento, no se puede mover.");
+      console.warn(' Missing event info');
       return;
     }
 
-    this.userService.moveUserTripActivity(itineraryId, activityId, fromDayDate, toDayDate)
-      .subscribe({
-        next: (updatedItinerary) => {
-          console.log("Actividad movida exitosamente:", updatedItinerary);
-          this.updateCalendarEvents(updatedItinerary);
-          this.showToast("✅ Activity moved!");
-        },
-        error: (error) => {
-          console.error("Error al mover la actividad:", error);
-          info.revert();
-          this.showToast("❌ Failed to move activity.");
-        }
-      });
+    this.userService.moveUserTripActivity(itineraryId, activityId, fromDayDate, toDayDate).subscribe({
+      next: () => {
+        this.loadUserSavedTrips();
+      },
+      error: (error) => {
+        console.error(' Error moving activity:', error);
+        info.revert();
+      },
+    });
   }
 
   onSaveTrip({ startDate }: { startDate: string }): void {
     const currentTrip = this.currentItinerary();
     if (!currentTrip) {
-      this.showToast("⚠️ No itinerary currently loaded");
+      this.showToast('⚠️ No itinerary loaded.');
       return;
     }
 
     const newTripStartDate = new Date(startDate).toISOString().split('T')[0];
-    const tripAlreadyExists = this.savedTrips().some(
-      trip => new Date(trip.startDate).toISOString().split('T')[0] === newTripStartDate
+    const tripExists = this.savedTrips().some(
+      (trip) => new Date(trip.startDate).toISOString().split('T')[0] === newTripStartDate
     );
 
-    if (tripAlreadyExists) {
-      this.showToast("⚠️ You already have a trip saved for this date.");
+    if (tripExists) {
+      this.showToast('⚠️ Trip already exists for this date.');
       return;
     }
 
-    this.userService.saveUserTrip(
-      currentTrip.city,
-      currentTrip.days,
-      new Date(startDate)
-    ).subscribe({
+    this.userService.saveUserTrip(currentTrip.city, currentTrip.days, new Date(startDate)).subscribe({
       next: (newTrip) => {
-        console.log("Nuevo viaje guardado:", newTrip);
-        this.savedTrips.update(trips => [...trips, newTrip]);
+        this.savedTrips.update((trips) => [...trips, newTrip]);
         this.currentItinerary.set(newTrip);
         const newTripEvents = this.generateEventsFromItinerary(newTrip, new Date(newTrip.startDate));
-        this.events.update(events => [...events, ...newTripEvents]);
+        this.events.update((events) => [...events, ...newTripEvents]);
         this.calendarOptions = { ...this.calendarOptions, events: this.events() };
-        this.showToast("✅ Trip saved successfully.");
+        this.showToast('✅ Trip saved successfully.');
         this.tripModalOpen.set(false);
       },
       error: (error) => {
-        console.error(" Error saving trip:", error);
-        this.showToast("❌ Error saving the trip.");
-      }
+        console.error(' Error saving trip:', error);
+        this.showToast('❌ Error saving trip.');
+      },
     });
   }
 

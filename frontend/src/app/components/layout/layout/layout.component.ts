@@ -12,6 +12,6 @@ import { FooterComponent } from '../../shared/footer/footer.component';
   styleUrl: './layout.component.scss'
 })
 export class LayoutComponent {
-  imageLoaded = false;
+ 
 
 }

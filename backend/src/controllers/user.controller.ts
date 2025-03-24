@@ -144,16 +144,26 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     const { itineraryId } = req.params;
     const { activityId, fromDayDate, toDayDate } = req.body;
 
+    const isValidId =
+      mongoose.Types.ObjectId.isValid(itineraryId) &&
+      mongoose.Types.ObjectId.isValid(activityId);
+
     if (
-      !itineraryId || !activityId || !fromDayDate || !toDayDate ||
-      !mongoose.Types.ObjectId.isValid(itineraryId) || !mongoose.Types.ObjectId.isValid(activityId)
+      !itineraryId ||
+      !activityId ||
+      !fromDayDate ||
+      !toDayDate ||
+      !isValidId
     ) {
       res.status(400).json({ error: "Invalid data. Check itineraryId, activityId, and dates" });
       return;
     }
 
     const user = await User.findById(userId);
-    if (!user || !user.savedTrips.includes(itineraryId as unknown as mongoose.Types.ObjectId)) {
+    if (
+      !user ||
+      !user.savedTrips.includes(itineraryId as unknown as mongoose.Types.ObjectId)
+    ) {
       res.status(403).json({ error: "Trip does not belong to the user" });
       return;
     }
@@ -164,9 +174,19 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    const startDate = new Date(itinerary.startDate);
-    const fromDayIndex = Math.round((new Date(fromDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    const toDayIndex = Math.round((new Date(toDayDate).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const normalize = (d: string | Date) => {
+      const date = new Date(d);
+      date.setHours(0, 0, 0, 0);
+      return date;
+    };
+    
+
+    const start = normalize(itinerary.startDate);
+    const fromDate = normalize(fromDayDate);
+    const toDate = normalize(toDayDate);
+
+    const fromDayIndex = Math.round((fromDate.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    const toDayIndex = Math.round((toDate.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 
     if (
       fromDayIndex < 0 || fromDayIndex >= itinerary.days.length ||
@@ -179,9 +199,15 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     const fromDay = itinerary.days[fromDayIndex];
     const toDay = itinerary.days[toDayIndex];
 
-    const activityIndex = fromDay.activities.findIndex(act => {
-      return act.toString() === activityId;
-    });
+    const activityIndex = fromDay.activities.findIndex(
+      (act: string | mongoose.Types.ObjectId | { _id: string | mongoose.Types.ObjectId }) => {
+        if (typeof act === 'object' && act !== null && '_id' in act) {
+          return act._id.toString() === activityId;
+        }
+        return act.toString() === activityId;
+      }
+    );
+    
 
     if (activityIndex === -1) {
       res.status(404).json({ error: "Activity not found in the original day" });
@@ -196,7 +222,7 @@ export const moveUserTripActivity = async (req: AuthenticatedRequest, res: Respo
     return;
 
   } catch (error) {
-    console.error("Error in moveUserTripActivity:", error);
+    console.error("Error moving activity:", error);
     res.status(500).json({ error: "Internal server error" });
     return;
   }

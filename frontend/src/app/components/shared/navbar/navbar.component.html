@@ -1,7 +1,7 @@
 <header class="p-2 sm:p-6 flex justify-between items-center bg-black/30 backdrop-blur-md z-50">
   <div class="w-20"></div>
 
-  <!-- Navegación principal -->
+
   <nav class="hidden md:flex space-x-4 lg:space-x-8">
     <a routerLink="/welcome" class="text-white hover:text-green-400 text-sm md:text-base">Home</a>
     <a routerLink="/about" class="text-white hover:text-green-400 text-sm md:text-base">About</a>
@@ -9,7 +9,7 @@
     <a routerLink="/calendar" class="text-white hover:text-green-400 text-sm md:text-base">Calendar</a>
   </nav>
 
-  <!-- Botones de sesión (desktop) -->
+
   @if (authService.isAuthenticated()) { 
     <div class="hidden md:flex space-x-2 lg:space-x-4 me-2">
       <button 
@@ -33,7 +33,7 @@
     </div>
   }
 
-  <!-- Botón menú móvil -->
+
   <button 
     (click)="toggleMenu()" 
     class="md:hidden btn btn-outline text-white border-white me-3" 
@@ -46,7 +46,6 @@
   </button>
 </header>
 
-<!-- Menú desplegable móvil -->
 @if (isMenuOpen()) {
   <div class="relative w-full bg-black/60 backdrop-blur-md border-t border-gray-200 py-4 flex flex-col items-center md:hidden transition-all duration-300 z-40">
     <a routerLink="/welcome" class="py-2 text-white hover:text-green-400 text-sm">Home</a>

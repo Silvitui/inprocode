@@ -1,31 +1,43 @@
-<header class="p-2 sm:p-6 flex justify-between items-center bg-transparent ">
+<header class="p-2 sm:p-6 flex justify-between items-center bg-black/30 backdrop-blur-md z-50">
   <div class="w-20"></div>
+
+  <!-- Navegación principal -->
   <nav class="hidden md:flex space-x-4 lg:space-x-8">
-    <a routerLink="/welcome" class="text-white hover:text-green-500 text-sm md:text-base">Home</a>
-    <a routerLink="/about" class="text-white hover:text-green-500 text-sm md:text-base">About</a>
-    <a routerLink="/map" class="text-white hover:text-green-500 text-sm md:text-base">Destinations</a>
-    <a routerLink="/calendar" class="text-white hover:text-green-500 text-sm md:text-base">Calendar</a>
+    <a routerLink="/welcome" class="text-white hover:text-green-400 text-sm md:text-base">Home</a>
+    <a routerLink="/about" class="text-white hover:text-green-400 text-sm md:text-base">About</a>
+    <a routerLink="/map" class="text-white hover:text-green-400 text-sm md:text-base">Destinations</a>
+    <a routerLink="/calendar" class="text-white hover:text-green-400 text-sm md:text-base">Calendar</a>
   </nav>
 
+  <!-- Botones de sesión (desktop) -->
   @if (authService.isAuthenticated()) { 
     <div class="hidden md:flex space-x-2 lg:space-x-4 me-2">
-      <button (click)="logout()" class="btn btn-outline btn-xs md:btn-sm text-green-500 border-green-300 hover:bg-green-400 hover:text-white">
+      <button 
+        (click)="logout()" 
+        class="btn btn-outline btn-xs md:btn-sm text-white border-white hover:bg-white hover:text-green-700 shadow-md">
         Logout
       </button>
     </div>
   } @else { 
     <div class="hidden md:flex space-x-2 lg:space-x-4 me-3">
-      <button (click)="goToLogin()" class="btn btn-outline btn-xs md:btn-sm text-green-500 border-green-500 hover:bg-green-400 hover:text-white">
+      <button 
+        (click)="goToLogin()" 
+        class="btn btn-outline btn-xs md:btn-sm text-white border-white hover:bg-white hover:text-green-700 shadow-md">
         Login
       </button>
-      <button (click)="goToRegister()" class="btn btn-primary btn-xs md:btn-sm bg-green-500 hover:bg-green-600 text-white">
+      <button 
+        (click)="goToRegister()" 
+        class="btn btn-primary btn-xs md:btn-sm bg-white text-green-700 hover:bg-green-600 hover:text-white font-semibold shadow-md">
         Register
       </button>
     </div>
   }
 
-
-  <button (click)="toggleMenu()" class="md:hidden btn btn-outline text-green-500 border-green-500 me-3" aria-label="Toggle navigation menu">
+  <!-- Botón menú móvil -->
+  <button 
+    (click)="toggleMenu()" 
+    class="md:hidden btn btn-outline text-white border-white me-3" 
+    aria-label="Toggle navigation menu">
     @if (!isMenuOpen()) {
       <span>☰</span>
     } @else { 
@@ -34,22 +46,29 @@
   </button>
 </header>
 
+<!-- Menú desplegable móvil -->
 @if (isMenuOpen()) {
-  <div class="relative w-full bg-white border-t border-gray-200 py-4 flex flex-col items-center md:hidden transition-all duration-300">
-    <a routerLink="/welcome" class="py-2 hover:text-green-500 text-sm">Home</a>
-    <a routerLink="/about" class="py-2 hover:text-green-500 text-sm">About</a>
-    <a routerLink="/map" class="py-2 hover:text-green-500 text-sm">Destinations</a>
-    <a routerLink="/calendar" class="py-2 hover:text-green-500 text-sm">Calendar</a>
+  <div class="relative w-full bg-black/60 backdrop-blur-md border-t border-gray-200 py-4 flex flex-col items-center md:hidden transition-all duration-300 z-40">
+    <a routerLink="/welcome" class="py-2 text-white hover:text-green-400 text-sm">Home</a>
+    <a routerLink="/about" class="py-2 text-white hover:text-green-400 text-sm">About</a>
+    <a routerLink="/map" class="py-2 text-white hover:text-green-400 text-sm">Destinations</a>
+    <a routerLink="/calendar" class="py-2 text-white hover:text-green-400 text-sm">Calendar</a>
 
     @if (authService.isAuthenticated()) { 
-      <button (click)="logout()" class="mt-2 btn btn-outline btn-sm text-green-500 border-green-500 hover:bg-green-400 hover:text-white">
+      <button 
+        (click)="logout()" 
+        class="mt-2 btn btn-outline btn-sm text-white border-white hover:bg-white hover:text-green-700 shadow-md">
         Logout
       </button>
     } @else { 
-      <button (click)="goToLogin()" class="mt-2 btn btn-outline btn-sm text-green-500 border-green-500 hover:bg-green-400 hover:text-white">
+      <button 
+        (click)="goToLogin()" 
+        class="mt-2 btn btn-outline btn-sm text-white border-white hover:bg-white hover:text-green-700 shadow-md">
         Login
       </button>
-      <button (click)="goToRegister()" class="mt-2 btn btn-primary btn-sm bg-green-500 hover:bg-green-600 text-white">
+      <button 
+        (click)="goToRegister()" 
+        class="mt-2 btn btn-primary btn-sm bg-white text-green-700 hover:bg-green-600 hover:text-white font-semibold shadow-md">
         Register
       </button>
     }

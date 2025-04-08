@@ -70,7 +70,7 @@ This project is an Angular-based web application that integrates multiple plugin
 From ``/root`` folder, execute:
 ```sh
  cd backend
- npm install && npm run build
+ npm install 
 ```
 
 #### Add environment variables
@@ -82,6 +82,12 @@ In ``/backend`` folder create ``.env`` file containing:
   MAPBOX_API_KEY='your_mapbox_api_key'
 ```
 Filling ``MONGO_DB_URI`` ``JWT_SECRET`` & ``MAPBOX_API_KEY`` variables with your data.
+
+#### Compile backend
+In ``/backend`` folder, execute:
+```sh
+npm run build
+```
 
 #### 📌 Frontend
 From ``/inprocode`` folder, execute:

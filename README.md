@@ -61,30 +61,44 @@ This project is an Angular-based web application that integrates multiple plugin
 ## 🏗️ Setup Instructions
 ### 1️⃣ Clone the Repository
 ```sh
- https://github.com/Silvitui/inprocode.git
+ git clone https://github.com/Silvitui/inprocode.git
  cd inprocode
 ```
 
 ### 2️⃣ Install Dependencies
 #### 📌 Backend
+From ``/root`` folder, execute:
 ```sh
  cd backend
- npm install
+ npm install && npm run build
 ```
 
+#### Add environment variables
+In ``/backend`` folder create ``.env`` file containing:
+```sh
+  PORT=3000
+  MONGO_DB_URI='your_mongo_db_connection_string'
+  JWT_SECRET='your_secret'
+  MAPBOX_API_KEY='your_mapbox_api_key'
+```
+Filling ``MONGO_DB_URI`` ``JWT_SECRET`` & ``MAPBOX_API_KEY`` variables with your data.
+
 #### 📌 Frontend
+From ``/inprocode`` folder, execute:
 ```sh
  cd frontend
- npm install
+ npm install 
 ```
 
 ### 3️⃣ Start the Development Servers
+From ``/inprocode`` folder, execute:
 #### 🚀 Start the Backend
 ```sh
  cd backend
  npm run dev
 ```
 #### 🚀 Start the Frontend
+From ``/inprocode`` folder, execute:
 ```sh
  cd frontend
  ng serve -o
